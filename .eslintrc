@@ -1,0 +1,23 @@
+{
+  "overrides": [
+    {
+      "files": ["*.js"],
+      "excludedFiles": ["node_module/*"]
+    }
+  ],
+  "env": {
+    "browser": false,
+    "es6": true
+  },
+  "rules": {
+    "no-var": "error",
+    "no-console": "error",
+    "no-confusing-arrow": "warn",
+    "camelcase": "error",
+    "require-jsdoc": "warn",
+    "valid-jsdoc": "warn"
+  },
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  }
+}
