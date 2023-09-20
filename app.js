@@ -3,6 +3,7 @@ const express = require('express');
 const notFound = require('./middlewares/not-found');
 const errorHandlerMiddleware = require('./middlewares/error-handler');
 const userRoutes = require('./routes/users');
+const orgRoutes = require('./routes/orgRoutes');
 const lunchRoutes = require('./routes/lunchRoutes');
 const sequelize = require('./db/db');
 
@@ -13,8 +14,9 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 4000;
 
-app.use('api/users', userRoutes);
-app.use('api/lunch', lunchRoutes);
+app.use('/api/organization', orgRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/lunch', lunchRoutes);
 
 // Middlewares
 app.use(notFound);

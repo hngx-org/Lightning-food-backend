@@ -12,6 +12,7 @@ const Organization = sequelize.define(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     lunch_price: {
       type: DataTypes.DECIMAL,
