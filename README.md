@@ -74,10 +74,10 @@ Model, Controller
 - Request and Response format
 - API Testing teams: creating postman file
 
-- MYSQL_ADDON_HOST=bfjkcttl9owdewhqjpjf-mysql.services.clever-cloud.com
-- MYSQL_ADDON_DB=bfjkcttl9owdewhqjpjf
-- MYSQL_ADDON_USER=uzq1wq0wnpsg6cvu
-- MYSQL_ADDON_PORT=3306
-- MYSQL_ADDON_PASSWORD=2PcRLWSJAxvJhbWX2ZNr
-- MYSQL_ADDON_URI=mysql://uzq1wq0wnpsg6cvu:2PcRLWSJAxvJhbWX2ZNr@bfjkcttl9owdewhqjpjf-mysql.services.clever-cloud.com:3306/bfjkcttl9owdewhqjpjf
+MYSQL_ADDON_HOST=bfjkcttl9owdewhqjpjf-mysql.services.clever-cloud.com
+MYSQL_ADDON_DB=bfjkcttl9owdewhqjpjf
+MYSQL_ADDON_USER=uzq1wq0wnpsg6cvu
+MYSQL_ADDON_PORT=3306
+MYSQL_ADDON_PASSWORD=2PcRLWSJAxvJhbWX2ZNr
+MYSQL_ADDON_URI=mysql://uzq1wq0wnpsg6cvu:2PcRLWSJAxvJhbWX2ZNr@bfjkcttl9owdewhqjpjf-mysql.services.clever-cloud.com:3306/bfjkcttl9owdewhqjpjf
 - JWT_SIGNATURE= *QSJfus1TOH2fSHw41Ifo0LMN2fzeQD*
