@@ -1,3 +1,4 @@
+/* eslint-disable node/no-unsupported-features/es-syntax */
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db/db');
 
