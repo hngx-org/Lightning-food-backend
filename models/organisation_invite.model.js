@@ -12,15 +12,14 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
     token: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     expirationTimestamp: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: sequelize.literal('CURRENT_TIMESTAMP + INTERVAL 1 DAY'), 
-      },
- 
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP + INTERVAL 1 DAY'),
+    },
   });
 
   return orgInvites;

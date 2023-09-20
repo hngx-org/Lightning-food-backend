@@ -1,9 +1,10 @@
-const { DataTypes } = require("sequelize");
-const db = require("./db");
-const User = require("./user.model");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../db/db');
 
-const Launch = db.define(
-  "Launch",
+const User = require('./user.model');
+
+const Launch = sequelize.define(
+  'Launch',
   {
     id: {
       primaryKey: true,
@@ -14,16 +15,16 @@ const Launch = db.define(
     senderId: {
       type: DataTypes.UUID,
       allowNull: false,
-      references: { model: User, key: "id" },
+      references: { model: User, key: 'id' },
     },
     receiverId: {
       type: DataTypes.UUID,
       allowNull: false,
-      references: { model: User, key: "id" },
+      references: { model: User, key: 'id' },
     },
     quantity: {
       type: DataTypes.INTEGER,
-      allowNull: False,
+      allowNull: false,
     },
     redeemed: {
       type: DataTypes.BOOLEAN,
@@ -33,17 +34,17 @@ const Launch = db.define(
       type: DataTypes.TEXT,
     },
   },
-  { tableName: "launches", createdAt: "created_at", updatedAt: false }
+  { tableName: 'launches', createdAt: 'created_at', updatedAt: false },
 );
 // foreign key to user from receiver to allow usage like
 // launch.user
 Launch.belongsTo(User, {
-  foreignKey: "recieverId",
+  foreignKey: 'recieverId',
 });
 
 // foreign key to user from sender to allow usage like
 // launch.user
 Launch.belongsTo(User, {
-  foreignKey: "senderId",
+  foreignKey: 'senderId',
 });
 module.exports = Launch;
