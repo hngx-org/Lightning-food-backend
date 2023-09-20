@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs'); // import bcrypt to hash password
 const { User } = require('../models/user.model'); //import user model
 
+
 // Controller function to get user/staff details by UUID
 async function getUserById(req, res) {
   try {
