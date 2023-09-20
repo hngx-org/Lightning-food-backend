@@ -12,8 +12,8 @@ module.exports = (sequelize) => {
       defaultValue: 0,
     },
     org_id: {
-      type: DataTypes.UUID, 
-      defaultValue: Sequelize.UUIDV4, 
+      type: DataTypes.UUID,
+      defaultValue: Sequelize.UUIDV4,
       allowNull: false,
     },
   });
