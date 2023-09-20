@@ -1,12 +1,10 @@
-const { CustomErrorClass } = require('../Errors/custom-errors');
+const { CustomErrorClass } = require('../errors/custom-error')
 
 const errorHandlerMiddleware = (err, req, res, next) => {
-  if (err instanceof CustomErrorClass) {
-    return res.status(err.statusCode).json({ msg: err.message });
-  }
-  return res
-    .status(500)
-    .json({ msg: 'Something went wrong, please try again' });
-};
+    if (err instanceof CustomErrorClass) {
+        return res.status(err.statusCode).json({ msg: err.message })
+    }
+    return res.status(500).json({ msg: 'Something went wrong, please try again' })
+}
 
-module.exports = errorHandlerMiddleware;
+module.exports = errorHandlerMiddleware
