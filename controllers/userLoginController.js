@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const User = require('../models/user.model'); 
+const User = require('../models/user.model');
 
 const secretKey = process.env.JWT_SECRET_KEY;
 
@@ -17,7 +17,7 @@ const loginController = async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // Verifying the password 
+    // Verifying the password
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
 
     if (!isPasswordValid) {
@@ -31,7 +31,6 @@ const loginController = async (req, res) => {
 
     // Sending the token in the response
     res.status(200).json({ token });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });

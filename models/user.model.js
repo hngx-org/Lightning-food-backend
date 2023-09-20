@@ -30,7 +30,7 @@ const User = sequelize.define(
       allowNull: false,
     },
     phone: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       unique: true,
     },
     is_admin: {
@@ -44,7 +44,8 @@ const User = sequelize.define(
       references: { model: Organization, key: 'id' },
     },
     launch_credit_balance: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
     },
     refresh_token: {
       type: DataTypes.STRING,
@@ -69,6 +70,19 @@ const User = sequelize.define(
 User.belongsTo(Organization, {
   foreignKey: 'org_id',
   as: 'organization',
+});
+
+// Set up a default scope to exclude 'password_hash'
+User.addHook('afterFind', (users) => {
+  if (!Array.isArray(users)) {
+    // If it's a single instance, exclude 'password_hash'
+    delete users.dataValues.password_hash;
+  } else {
+    // If it's an array of instances, exclude 'password_hash' for each instance
+    users.forEach((user) => {
+      delete user.dataValues.password_hash;
+    });
+  }
 });
 
 module.exports = User;
