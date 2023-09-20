@@ -12,10 +12,9 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
     token: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      allowNull: false,
-    },
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     expirationTimestamp: {
         type: DataTypes.DATE,
         allowNull: false,
