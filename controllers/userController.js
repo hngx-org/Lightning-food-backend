@@ -46,7 +46,7 @@ async function createUser(req, res) {
 
     res.status(200).json({
       success: true,
-      message: 'User found',
+      message: 'User Registered successfully',
       data: {
         user: newUser,
       },
