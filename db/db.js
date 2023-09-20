@@ -1,8 +1,9 @@
-const Seqeulize = require("seqeulize")
-require('dotenv').config()
-const URI = process.env.MYSQL_ADDON_URI
+const { Sequelize } = require('sequelize');
+require('dotenv').config();
 
+const URI = process.env.MYSQL_ADDON_URI;
 
-const seqeulize = new Seqeulize(URI, { dialect: 'mysql' })
+const sequelize = new Sequelize(URI, { dialect: 'mysql' });
 
-module.exports = seqeulize
+module.exports = sequelize;
+
