@@ -2,7 +2,26 @@
 const bcrypt = require('bcrypt'); // import bcrypt to hash password
 const User = require('../models/user.model'); //import user model
 
-// Controller function to get user/staff details by UUID
+async function getMe(req, res) {
+  try {
+    const user = await User.findOne({ where: { id: req.user.id } });
+
+    res.status(200).json({
+      success: true,
+      message: 'User found',
+      data: {
+        user: user,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Internal Server Error',
+      data: null,
+    });
+  }
+}
+
 async function getUserById(req, res) {
   try {
     const userId = req.params.id;
@@ -119,7 +138,6 @@ async function getAllUsers(req, res) {
       },
     });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({
       success: false,
       message: 'Internal Server Error',
@@ -150,7 +168,6 @@ async function deleteUser(req, res) {
       data: null,
     });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({
       success: false,
       message: 'Internal Server Error',
@@ -201,7 +218,6 @@ async function updateUser(req, res) {
       },
     });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({
       success: false,
       message: 'Internal Server Error',
@@ -211,6 +227,7 @@ async function updateUser(req, res) {
 }
 
 module.exports = {
+  getMe,
   getUserById,
   createUser,
   getAllUsers,

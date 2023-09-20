@@ -1,3 +1,4 @@
+/* eslint-disable node/no-unsupported-features/es-syntax */
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db/db');
 
@@ -72,17 +73,10 @@ User.belongsTo(Organization, {
   as: 'organization',
 });
 
-// Set up a default scope to exclude 'password_hash'
-User.addHook('afterFind', (users) => {
-  if (!Array.isArray(users)) {
-    // If it's a single instance, exclude 'password_hash'
-    delete users.dataValues.password_hash;
-  } else {
-    // If it's an array of instances, exclude 'password_hash' for each instance
-    users.forEach((user) => {
-      delete user.dataValues.password_hash;
-    });
-  }
-});
+User.prototype.toJSON = function () {
+  const values = { ...this.get() };
+  delete values.password_hash;
+  return values;
+};
 
 module.exports = User;
