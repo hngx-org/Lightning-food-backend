@@ -20,7 +20,7 @@ Model, Controller
 * Authentication and Authorization
 * Models: users, organization
 * Middleware: authentication
-* Controllers: userLoginController, userRegisterationController, userLogoutController, forgotPasswordController, changePasswordController, 
+* Controllers: userLoginController, userRegisterationController, userLogoutController, changePasswordController, 
 emailConfirmationController, codeConfirmationController
 
 ### API Endpoints:
