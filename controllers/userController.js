@@ -1,5 +1,5 @@
-// eslint-disable-next-line import/extensions
-const User = require('../models/user.model.js'); //the name of the user model was auth.model in Federick's code
+const User = require('../models/user.model'); //import user model
+
 
 // Controller function to get user/staff details by UUID
 async function getUserById(req, res) {
@@ -23,8 +23,7 @@ async function getUserById(req, res) {
       },
     });
   } catch (error) {
-    console.error('Error fetching user:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Internal Server Error',
       data: null,
