@@ -4,13 +4,13 @@ const User = require('./User');
 module.exports = (sequelize) => {
   const Withdrawal = sequelize.define('Withdrawal', {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID, // Change the data type to UUID
+      defaultValue: Sequelize.UUIDV4, // Generate UUID values using Sequelize
       allowNull: false,
       primaryKey: true,
-      autoIncrement: true,
     },
     user_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID, // Change the data type to UUID
       allowNull: false,
       references: {
         model: User,
