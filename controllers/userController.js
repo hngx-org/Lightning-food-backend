@@ -49,7 +49,6 @@ async function createUser(req, res) {
       bank_code: req.body.bank_code,
       bank_name: req.body.bank_name,
       bank_number: req.body.bank_number,
-
     };
     const newUser = await User.create(user);
 
