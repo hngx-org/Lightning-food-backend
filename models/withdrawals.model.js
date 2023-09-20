@@ -1,12 +1,13 @@
-const { DataTypes, Sequelize } = require('sequelize');
-const User = require('./User');
+const { DataTypes } = require('sequelize');
+const User = require('./user.model');
+const sequelize = require('../db/db');
 
-module.exports = (sequelize) => {
-  const Withdrawal = sequelize.define('Withdrawal', {
+const Withdrawal = sequelize.define(
+  'Withdrawal',
+  {
     id: {
       type: DataTypes.UUID,
-      defaultValue: Sequelize.UUIDV4,
-      allowNull: false,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
     user_id: {
@@ -30,13 +31,14 @@ module.exports = (sequelize) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-  }, {
-    tableName: 'withdrawals', 
+  },
+  {
+    tableName: 'withdrawals',
     createdAt: 'created_at',
     updatedAt: 'updated_at',
-  });
+  },
+);
 
-  Withdrawal.belongsTo(User);
+Withdrawal.belongsTo(User);
 
-  return Withdrawal;
-};
+module.exports = Withdrawal;

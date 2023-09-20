@@ -13,8 +13,8 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 4000;
 
-app.use('/users', userRoutes);
-app.use('/lunch', lunchRoutes);
+app.use('api/users', userRoutes);
+app.use('api/lunch', lunchRoutes);
 
 // Middlewares
 app.use(notFound);
