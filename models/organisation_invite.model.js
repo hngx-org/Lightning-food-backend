@@ -17,8 +17,11 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
     expirationTimestamp: {
-      type: DataTypes.DATE,
-    },
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP + INTERVAL 1 DAY'), 
+      },
+ 
   });
 
   return orgInvites;
