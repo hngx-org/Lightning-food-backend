@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs'); // import bcrypt to hash password
-const User = require('../models/user.model'); //import user model
+const { User } = require('../models/user.model'); //import user model
 
 // Controller function to get user/staff details by UUID
 async function getUserById(req, res) {
@@ -40,7 +40,16 @@ async function createUser(req, res) {
       last_name: req.body.last_name,
       email: req.body.email,
       phone: req.body.phone,
-      password_hash: await bcrypt.hash(req.body.password, salt),
+      password_hash: await bcrypt.hash(req.body.password_hash, salt),
+      isAdmin: req.body.isAdmin,
+      profile_pic: req.body.profile_pic,
+      org_id: req.body.org_id,
+      launch_credit_balance: req.body.launch_credit_balance,
+      refresh_token: req.body.refresh_token,
+      bank_code: req.body.bank_code,
+      bank_name: req.body.bank_name,
+      bank_number: req.body.bank_number,
+
     };
     const newUser = await User.create(user);
 
@@ -52,7 +61,11 @@ async function createUser(req, res) {
       },
     });
   } catch (error) {
-    res.status(500).send(error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal Server Error',
+      data: null,
+    });
   }
 }
 
