@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs'); // import bcrypt to hash password
 const User = require('../models/user.model'); //import user model
 
 // Controller function to get user/staff details by UUID
@@ -27,6 +28,21 @@ async function getUserById(req, res) {
       message: 'Internal Server Error',
       data: null,
     });
+  }
+}
+
+// Controllers Function to register new user
+async function createUser(req, res) {
+  try {
+    const user = {
+      first_name: req.body.first_name,
+      last_name: req.body.last_name,
+      email: req.body.email,
+      phone: req.body.phone,
+      password: await bcrypt.hash(req.body.password, salt),
+    };
+  } catch (error) {
+    res.status(500).send(error);
   }
 }
 
