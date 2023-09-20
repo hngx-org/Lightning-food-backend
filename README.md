@@ -9,11 +9,11 @@ Model, Controller
 
 
 ### Technologies and Framework
-Database - MySQL
-Dependencies - express.js, Node.js, sequelize, es-lint, prettier, dotenv, JWT
-Authentication: 
-Model: Link to model
-Repo Link
+  Database - MySQL
+  Dependencies - express.js, Node.js, sequelize, es-lint, prettier, dotenv, JWT
+  Authentication: 
+  Model: Link to model
+  Repo Link
 
 
 ### System Components
