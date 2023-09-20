@@ -57,4 +57,6 @@ const User = sequelize.define("User", {
 })
 
 
-m
+module.exports = {
+    User
+}
