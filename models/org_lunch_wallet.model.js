@@ -1,24 +1,29 @@
-const { DataTypes, Sequelize } = require('sequelize');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../db/db');
 
-module.exports = (sequelize) => {
-  const OrgLunchWallet = sequelize.define('OrgLunchWallet', {
+const OrgLunchWallet = sequelize.define(
+  'OrgLunchWallet',
+  {
     id: {
       type: DataTypes.UUID,
-      defaultValue: Sequelize.UUIDV4,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
     balance: {
       type: DataTypes.INTEGER,
-      defaultValue: 0,
+      defaultValue: 1000,
     },
     org_id: {
       type: DataTypes.UUID,
-      defaultValue: Sequelize.UUIDV4,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
     },
-  });
+  },
+  {
+    tableName: 'organization_lunch_wallets',
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+  },
+);
 
-  sequelize.sync();
-
-  return OrgLunchWallet;
-};
+module.exports = OrgLunchWallet;

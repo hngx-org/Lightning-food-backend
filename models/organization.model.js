@@ -1,26 +1,32 @@
-const { DataTypes, Sequelize } = require('sequelize');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../db/db');
 
-module.export = (sequelize) => {
-  const Organization = sequelize.define('Organization', {
+const Organization = sequelize.define(
+  'Organization',
+  {
     id: {
       type: DataTypes.UUID,
-      defaultValue: Sequelize.UUIDV4,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
     name: {
-      type: DataTypes.VARCHAR,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     lunch_price: {
       type: DataTypes.DECIMAL,
+      defaultValue: 2000,
       allowNull: false,
     },
-    currency: {
-      type: DataTypes.VARCHAR,
+    currency_code: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
-  });
-  // Sync the model with the database (create the table if it doesn't exist)
-  sequelize.sync();
-  return Organization;
-};
+  },
+  {
+    tableName: 'organizations',
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+  },
+);
+module.exports = Organization;
