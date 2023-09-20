@@ -8,8 +8,11 @@ const notFound = require('./middlewares/not-found')
 const errorHandlerMiddleware = require('./middlewares/error-handler')
 
 const userRoutes = require('./routes/users');
+const lunchRoutes = require('./routes/lunchRoutes')
 
 app.use('/users', userRoutes);
+
+app.use('/lunch', lunchRoutes);
 
 //db connction here
 
