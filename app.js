@@ -1,8 +1,8 @@
-require('dotenv').config()
-const express = require('express')
-const app = express()
+require('dotenv').config();
+const express = require('express');
 
-const URI = process.env.MYSQL_ADDON_URI
+const app = express();
 
+const URI = process.env.MYSQL_ADDON_URI;
 
-app.listen()
+app.listen();
