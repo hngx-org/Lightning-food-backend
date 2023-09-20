@@ -5,7 +5,7 @@ const { getUserById } = require('../controllers/userController');
 const { createUser } = require('../controllers/userController');
 
 /* GET users listing. */
-router.get('/', (req, res, next) => {
+router.get('/', (req, res) => {
   res.send('respond with a resource');
 });
 
@@ -13,7 +13,7 @@ router.get('/', (req, res, next) => {
 router.get('/:id', getUserById);
 
 // Create a new user
-router.post('/api/user_reg', createUser);
+router.post('/api/register', createUser);
 
 module.exports = router;
 

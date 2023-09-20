@@ -1,6 +1,5 @@
-const { Sequelize, DataTypes } = require('sequelize');
-
-const sequelize = new Sequelize('sqlite::memory:');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../db/db');
 
 const User = sequelize.define('User', {
   id: {
@@ -55,6 +54,17 @@ const User = sequelize.define('User', {
   },
 });
 
-module.exports = {
-  User,
-};
+// Set up a default scope to exclude 'password_hash'
+User.addHook('afterFind', (users) => {
+  if (!Array.isArray(users)) {
+    // If it's a single instance, exclude 'password_hash'
+    delete users.dataValues.password_hash;
+  } else {
+    // If it's an array of instances, exclude 'password_hash' for each instance
+    users.forEach((user) => {
+      delete user.dataValues.password_hash;
+    });
+  }
+});
+
+module.exports = User;

@@ -1,10 +1,10 @@
-const { DataTypes, Sequelize } = require('sequelize');
+const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
   const OrgLunchWallet = sequelize.define('OrgLunchWallet', {
     id: {
       type: DataTypes.UUID,
-      defaultValue: Sequelize.UUIDV4,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
     balance: {
@@ -13,7 +13,7 @@ module.exports = (sequelize) => {
     },
     org_id: {
       type: DataTypes.UUID,
-      defaultValue: Sequelize.UUIDV4,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
     },
   });

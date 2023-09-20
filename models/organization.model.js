@@ -1,10 +1,10 @@
-const { DataTypes, Sequelize } = require('sequelize');
+const { DataTypes } = require('sequelize');
 
 module.export = (sequelize) => {
   const Organization = sequelize.define('Organization', {
     id: {
       type: DataTypes.UUID,
-      defaultValue: Sequelize.UUIDV4,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
     name: {
