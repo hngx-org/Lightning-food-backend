@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const { getUserById } = require('../controllers/userController');
+const { createUser } = require('../controllers/userController');
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
@@ -10,6 +11,9 @@ router.get('/', (req, res, next) => {
 
 // GET get user or staff details by ID
 router.get('/:id', getUserById);
+
+// Create a new user
+router.post('/api/user_reg', createUser);
 
 module.exports = router;
 

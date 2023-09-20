@@ -34,6 +34,7 @@ async function getUserById(req, res) {
 // Controllers Function to register new user
 async function createUser(req, res) {
   try {
+    const salt = await bcrypt.genSalt(10);
     const user = {
       first_name: req.body.first_name,
       last_name: req.body.last_name,
@@ -41,6 +42,15 @@ async function createUser(req, res) {
       phone: req.body.phone,
       password: await bcrypt.hash(req.body.password, salt),
     };
+    const newUser = await User.create(user);
+
+    res.status(200).json({
+      success: true,
+      message: 'User found',
+      data: {
+        user: newUser,
+      },
+    });
   } catch (error) {
     res.status(500).send(error);
   }
@@ -48,4 +58,5 @@ async function createUser(req, res) {
 
 module.exports = {
   getUserById,
+  createUser,
 };
