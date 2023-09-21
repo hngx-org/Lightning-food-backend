@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { createCustomError } = require('../errors/custom-errors');
+const { createCustomError } = require('../Errors/custom-errors');
 
 const logoutController = (req, res) => {
   try {

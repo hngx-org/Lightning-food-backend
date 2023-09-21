@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 const Organization = require('../models/organization.model');
 const LunchWallet = require('../models/org_lunch_wallet.model');
-const { createCustomError } = require('../errors/custom-errors');
+const { createCustomError } = require('../Errors/custom-errors');
 
 // Create a new organization and user (Admin user only)
 const createOrganization = async (req, res, next) => {

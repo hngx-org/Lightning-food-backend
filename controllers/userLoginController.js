@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
-const { createCustomError } = require('../errors/custom-errors');
+const { createCustomError } = require('../Errors/custom-errors');
 
 const secretKey = process.env.JWT_SECRET_KEY;
 

@@ -60,14 +60,6 @@ async function createUser(req, res) {
       email,
       phone,
       password,
-      is_admin,
-      profile_pic,
-      org_id,
-      launch_credit_balance,
-      refresh_token,
-      bank_code,
-      bank_name,
-      bank_number,
     } = req.body;
 
     // Validate input data
