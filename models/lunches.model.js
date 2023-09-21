@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db/db');
 
-const User = require('./user.model');
+const { User } = require('./user.model');
 
 const Launch = sequelize.define(
   'Launch',
@@ -39,7 +39,7 @@ const Launch = sequelize.define(
 // foreign key to user from receiver to allow usage like
 // launch.user
 Launch.belongsTo(User, {
-  foreignKey: 'recieverId',
+  foreignKey: 'receiverId',
 });
 
 // foreign key to user from sender to allow usage like

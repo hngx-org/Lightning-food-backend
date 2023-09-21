@@ -1,16 +1,20 @@
 require('dotenv').config();
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const app = express();
 
-const URI = process.env.MYSQL_ADDON_URI;
+// Parse JSON request bodies
+app.use(bodyParser.json());
+
+// const URI = process.env.MYSQL_ADDON_URI;
 
 const PORT = process.env.PORT || 4000;
 const notFound = require('./middlewares/not-found');
 const errorHandlerMiddleware = require('./middlewares/error-handler');
 
 const userRoutes = require('./routes/users');
-const lunchRoutes = require('./routes/lunchRoutes')
+const lunchRoutes = require('./routes/lunchRoutes');
 
 app.use('/users', userRoutes);
 

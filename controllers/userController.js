@@ -1,6 +1,4 @@
-const bcrypt = require('bcryptjs'); // import bcrypt to hash password
 const { User } = require('../models/user.model'); //import user model
-
 
 // Controller function to get user/staff details by UUID
 async function getUserById(req, res) {
@@ -33,15 +31,14 @@ async function getUserById(req, res) {
 }
 
 // Controllers Function to register new user
-async function createUser(req, res) {
+const createUser = async (req, res) => {
   try {
-    const salt = await bcrypt.genSalt(10);
     const user = {
       first_name: req.body.first_name,
       last_name: req.body.last_name,
       email: req.body.email,
       phone: req.body.phone,
-      password_hash: await bcrypt.hash(req.body.password_hash, salt),
+      password_hash: req.body.password_hash,
       isAdmin: req.body.isAdmin,
       profile_pic: req.body.profile_pic,
       org_id: req.body.org_id,
@@ -61,13 +58,10 @@ async function createUser(req, res) {
       },
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: 'Internal Server Error',
-      data: null,
-    });
+    console.error('Error creating user:', error);
+    res.status(500).json({ error: 'Unable to create user' });
   }
-}
+};
 
 module.exports = {
   getUserById,
