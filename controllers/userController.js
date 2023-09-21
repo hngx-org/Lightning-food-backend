@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
-const bcrypt = require('bcrypt'); // import bcrypt to hash password
-const User = require('../models/user.model'); //import user model
+const bcrypt = require('bcrypt');
+const User = require('../models/user.model');
+const Invite = require('../models/organisation_invite.model');
 
 async function getMe(req, res) {
   try {
@@ -68,13 +69,25 @@ async function createUser(req, res) {
       bank_code,
       bank_name,
       bank_number,
+      token,
     } = req.body;
 
     // Validate input data
-    if (!first_name || !last_name || !email || !password) {
+    if (!first_name || !last_name || !email || !password || !token) {
       return res.status(400).json({
         success: false,
         message: 'Missing required fields',
+        data: null,
+      });
+    }
+
+    // Check if the token is valid and retrieve org_id
+    const invite = await Invite.findOne({ where: { token } });
+
+    if (!invite || new Date() > invite.ttl) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid or expired invitation token',
         data: null,
       });
     }
@@ -128,7 +141,9 @@ async function createUser(req, res) {
 
 async function getAllUsers(req, res) {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      where: { org_id: req.user.org_id },
+    });
 
     res.status(200).json({
       success: true,
