@@ -1,11 +1,11 @@
 require('dotenv').config();
 const express = require('express');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 
 const app = express();
 
 // Parse JSON request bodies
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
 // const URI = process.env.MYSQL_ADDON_URI;
 
