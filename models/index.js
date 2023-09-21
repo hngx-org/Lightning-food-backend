@@ -13,14 +13,14 @@ const Lunch = connection.define("Lunch", {
   org_id: {
     type: Sequelize.TEXT,
     references: {
-      model: "User",
+      model: "Users",
       key: "org_id",
     },
   },
   senderId: {
     type: Sequelize.TEXT,
     references: {
-      model: "User",
+      model: "Users",
       key: "id",
     },
   },
