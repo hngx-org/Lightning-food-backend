@@ -3,10 +3,11 @@ const Organization = require('../models/organization.model');
 const LunchWallet = require('../models/org_lunch_wallet.model');
 const { createCustomError } = require('../errors/custom-errors');
 const orgInvites = require('../models/organisation_invite.model');
-const {
-  generateUniqueToken,
-  sendInvitationEmail,
-} = require('../utils/sendOTP');
+
+const { generateUniqueToken, sendInvitationEmail } = {
+  generateUniqueToken: '',
+  sendInvitationEmail: '',
+};
 
 // Create a new organization and user (Admin user only)
 const createOrganization = async (req, res, next) => {
@@ -40,7 +41,7 @@ const createOrganization = async (req, res, next) => {
   }
 };
 
-async function sendInvitation(req, res, next) {
+async function sendInvite(req, res, next) {
   try {
     const { email, organizationId } = req.body;
 
@@ -67,4 +68,30 @@ async function sendInvitation(req, res, next) {
   }
 }
 
-module.exports = { sendInvitation, createOrganization };
+/**
+ * Updates the organizational detail
+ * @reaquires payload {"name":"org name", "lunch_price":100, "currency": "USD"}
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @param {*} next
+ */
+const updateOrgDetails = async (req, res) => {
+  const { name, lunchPrize, currency } = req.body;
+  const { isAdmin, org_id } = req.user;
+
+  if (!isAdmin) {
+    throw createCustomError('This user is not an admin', 403);
+  }
+
+  const organization = await Organization.findByPk(org_id);
+
+  organization.update({
+    name: name,
+    lunch_prize: lunchPrize,
+    currency: currency,
+  });
+
+  res.json(organization).status(201);
+};
+
+module.exports = { sendInvite, createOrganization, updateOrgDetails };

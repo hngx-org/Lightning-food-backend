@@ -42,13 +42,13 @@ const Lunch = sequelize.define(
   { tableName: 'lunches', createdAt: 'created_at', updatedAt: false },
 );
 // foreign key to user from receiver to allow usage like
-// launch.user
+// lunch.user
 Lunch.belongsTo(User, {
   foreignKey: 'recieverId',
 });
 
 // foreign key to user from sender to allow usage like
-// launch.user
+// lunch.user
 Lunch.belongsTo(User, {
   foreignKey: 'senderId',
 });
