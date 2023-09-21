@@ -10,7 +10,7 @@ const {
   deleteUser,
 } = require('../controllers/userController');
 const loginController = require('../controllers/userLoginController');
-const logoutControler = require('../controllers/userLogoutController');
+const logoutController = require('../controllers/userLogoutController');
 
 router.post('/auth/signup', createUser);
 router.post('/auth/login', loginController);
