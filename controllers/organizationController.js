@@ -41,7 +41,7 @@ const createOrganization = async (req, res, next) => {
   }
 };
 
-async function sendInvitation(req, res, next) {
+async function sendInvite(req, res, next) {
   try {
     const { email, organizationId } = req.body;
 
@@ -68,4 +68,4 @@ async function sendInvitation(req, res, next) {
   }
 }
 
-module.exports = { sendInvitation, createOrganization };
+module.exports = { sendInvite, createOrganization };
