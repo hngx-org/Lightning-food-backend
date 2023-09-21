@@ -89,9 +89,10 @@ async function redeemGiftController(req, res) {
         message: 'Please provide all required fields',
       });
     }
-
-    const userWithdrawing = await User.findOne({where: {bank_number}})
-
+    
+    const userWithdrawing = await User.findOne({where: {bank_number}}) // for-refactoring find by email
+    // validate user with bank if null save bank details to user table
+    
     await userWithdrawing.decrement('lunch_credit_balance :', { by: amount });
     await userWithdrawing.save();
     const newEntry = await Withdrawals.create({
