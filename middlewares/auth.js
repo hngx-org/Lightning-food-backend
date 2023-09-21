@@ -22,4 +22,22 @@ async function auth(req, res, next) {
   }
 }
 
-module.exports = auth;
+/**
+ * checks if the user is an admin user
+ * @requires auth middleware be added first
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @param {*} next
+ */
+function adminUser(req, res, next) {
+  const { isAdmin } = req.user;
+  try {
+    if (!isAdmin) {
+      throw createCustomError('Not admin user', 403);
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
+module.exports = { auth, adminUser };
