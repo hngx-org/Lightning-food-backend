@@ -126,4 +126,5 @@ async function redeemGiftController(req, res) {
     });
   }
 }
-    module.exports = { getAllLunch, sendLunch, redeemGiftController };
+
+module.exports = { getAllLunch, sendLunch, redeemGiftController };
