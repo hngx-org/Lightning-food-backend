@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 const bcrypt = require('bcrypt'); // import bcrypt to hash password
 const User = require('../models/user.model'); //import user model
+const { createCustomError } = require('../errors/custom-errors');
 
 // Controller function to get user/staff details by UUID
 async function getUserById(req, res) {
@@ -53,11 +54,13 @@ async function createUser(req, res) {
 
     // Validate input data
     if (!first_name || !last_name || !email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: 'Missing required fields',
-        data: null,
-      });
+      // TODO: truly validate data
+      throw createCustomError('Missing required fields', 400);
+      // return res.status(400).json({
+      //   success: false,
+      //   message: 'Missing required fields',
+      //   data: null,
+      // });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -81,21 +84,27 @@ async function createUser(req, res) {
 
     const newUser = await User.create(user);
 
-    res.status(200).json({
+    const userWithoutPassword = Object.assign(newUser.toJSON)
+    delete userWithoutPassword.password_hash;
+    console.log(userWithoutPassword);
+
+    return res.status(200).json({
       success: true,
       message: 'User registered successfully',
       data: {
-        user: newUser,
+        user: userWithoutPassword,
       },
     });
   } catch (error) {
-    console.error(error); // Logging the error for debugging purposes
+    console.error('error', error.errors[0].message); // Logging the error for debugging purposes
 
     if (error.name === 'SequelizeUniqueConstraintError') {
       // Unique constraint violation (duplicate email)
+      let errorMessage = error.errors[0].message;
+      errorMessage = errorMessage[0].toUpperCase() + errorMessage.slice(1);
       return res.status(400).json({
         success: false,
-        message: 'Email already exists',
+        message: errorMessage,
         data: null,
       });
     }

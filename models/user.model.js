@@ -30,11 +30,12 @@ const User = sequelize.define(
       allowNull: false,
     },
     phone: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       unique: true,
     },
     is_admin: {
       type: DataTypes.BOOLEAN,
+      defaultValue: false
     },
     profile_pic: {
       type: DataTypes.STRING,
@@ -43,8 +44,9 @@ const User = sequelize.define(
       type: DataTypes.UUID,
       references: { model: Organization, key: 'id' },
     },
-    launch_credit_balance: {
+    lunch_credit_balance: {
       type: DataTypes.STRING,
+      defaultValue: '1000'
     },
     refresh_token: {
       type: DataTypes.STRING,
@@ -58,6 +60,17 @@ const User = sequelize.define(
     bank_number: {
       type: DataTypes.STRING,
     },
+    bank_region: {
+      type: DataTypes.STRING
+    },
+    currency_code: {
+      type: DataTypes.STRING,
+      defaultValue: 'NGN'
+    },
+    currency: {
+      type: DataTypes.STRING,
+      defaultValue: 'Naira'
+    }
   },
   {
     tableName: 'users',
