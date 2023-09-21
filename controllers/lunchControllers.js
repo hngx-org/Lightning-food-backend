@@ -37,43 +37,4 @@ const getAllLunch = async (req, res) => {
   }
 };
 
-const sendLunch = async (req, res) => {
-  const { receiverId, quantity, note } = req.body;
-
-  try {
-    //Create a new lunch
-    const lunch = await Lunch.create({
-      sender_id: req.user.id,
-      receiver_id: receiverId,
-      quantity,
-      note,
-    });
-
-    const sender = await User.findOne({ where: { id: req.id } });
-    const receiver = await User.findOne({ where: { id: receiverId } });
-
-    //Update the sender's balance
-    await sender.update({
-      balance: sender.balance - quantity,
-    });
-
-    //Update the receiver's balance
-    await receiver.update({
-      balance: receiver.balance + quantity,
-    });
-
-    res.status(201).json({
-      success: true,
-      message: 'Lunch sent successfully',
-      data: lunch,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Internal Server Error',
-      data: null,
-    });
-  }
-};
-
-module.exports = { getAllLunch, sendLunch };
+module.exports = { getAllLunch };
