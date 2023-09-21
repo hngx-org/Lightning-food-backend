@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
+const { createCustomError } = require('../errors/custom-errors');
 
 async function auth(req, res, next) {
   try {
@@ -11,14 +12,13 @@ async function auth(req, res, next) {
 
     if (!user) {
       //this should be updated after custom errors have been implemented
-      throw new Error('User not Authenticated');
+      throw createCustomError('Access Denied', 401);
     }
 
     req.user = user.dataValues;
     req.token = token;
   } catch (error) {
-    console.log(error.message);
-    //switch to  next(error) after error middleware have been created
+    next(error);
   }
 }
 

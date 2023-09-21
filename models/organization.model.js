@@ -16,7 +16,7 @@ const Organization = sequelize.define(
     },
     lunch_price: {
       type: DataTypes.DECIMAL,
-      defaultValue: 2000,
+      defaultValue: 1000,
       allowNull: false,
     },
     currency_code: {

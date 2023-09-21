@@ -36,6 +36,7 @@ const User = sequelize.define(
     },
     is_admin: {
       type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
     profile_pic: {
       type: DataTypes.STRING,
@@ -44,7 +45,7 @@ const User = sequelize.define(
       type: DataTypes.UUID,
       references: { model: Organization, key: 'id' },
     },
-    launch_credit_balance: {
+    lunch_credit_balance: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
@@ -59,6 +60,17 @@ const User = sequelize.define(
     },
     bank_number: {
       type: DataTypes.STRING,
+    },
+    bank_region: {
+      type: DataTypes.STRING,
+    },
+    currency_code: {
+      type: DataTypes.STRING,
+      defaultValue: 'NGN',
+    },
+    currency: {
+      type: DataTypes.STRING,
+      defaultValue: 'Naira',
     },
   },
   {
@@ -79,4 +91,7 @@ User.prototype.toJSON = function () {
   return values;
 };
 
+(async () => {
+  await User.sync({ alter: true });
+})();
 module.exports = User;
