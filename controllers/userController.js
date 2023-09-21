@@ -1,8 +1,6 @@
 /* eslint-disable camelcase */
-const bcrypt = require('bcrypt'); // import bcrypt to hash password
 const User = require('../models/user.model'); //import user model
 const { createCustomError } = require('../errors/custom-errors');
-const Invite = require('../models/organisation_invite.model');
 
 async function getMe(req, res, next) {
   try {
@@ -24,14 +22,13 @@ async function getMe(req, res, next) {
   }
 }
 
-
 async function getUserById(req, res, next) {
   try {
     const userId = req.params.id;
     const user = await User.findOne({ where: { id: userId } });
 
     if (!user) {
-      throw createCustomError('User not found', 404)
+      throw createCustomError('User not found', 404);
     }
 
     res.status(200).json({
@@ -42,91 +39,11 @@ async function getUserById(req, res, next) {
       },
     });
   } catch (error) {
-    next(error)
+    next(error);
   }
 }
 
 // Controllers Function to register new user
-async function createUser(req, res, next) {
-  try {
-    const {
-      first_name,
-      last_name,
-      email,
-      phone,
-      password,
-      is_admin,
-      profile_pic,
-      org_id,
-      lunch_credit_balance,
-      refresh_token,
-      bank_code,
-      bank_name,
-      bank_number,
-      token,
-    } = req.body;
-
-
-    // Validate input data
-
-    if (!first_name || !last_name || !email || !password || !token) {
-      // TODO: truly validate data
-      throw createCustomError('Missing required fields', 400);
-
-    }
-
-    // Check if the token is valid and retrieve org_id
-    const invite = await Invite.findOne({ where: { token } });
-
-    if (!invite || new Date() > invite.ttl) {
-      throw createCustomError('Invalid or expired invitation token', 400)
-    }
-
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    const user = {
-      first_name,
-      last_name,
-      email,
-      phone,
-      password_hash: hashedPassword,
-      is_admin,
-      profile_pic,
-      org_id,
-      lunch_credit_balance,
-      refresh_token,
-      bank_code,
-      bank_name,
-      bank_number,
-    };
-
-    const newUser = await User.create(user);
-    delete newUser.password_hash;
-
-    const userWithoutPassword = Object.assign(newUser.toJSON)
-    delete userWithoutPassword.password_hash;
-    console.log(userWithoutPassword);
-
-    return res.status(200).json({
-      success: true,
-      message: 'User registered successfully',
-      data: {
-        user: userWithoutPassword,
-      },
-    });
-  } catch (error) {
-
-    if (error.name === 'SequelizeUniqueConstraintError') {
-      // Unique constraint violation (duplicate email)
-      let errorMessage = error.errors[0].message;
-      errorMessage = errorMessage[0].toUpperCase() + errorMessage.slice(1);
-      next(createCustomError(errorMessage, 400))
-    }
-    next(error.message)
-  }
-}
-
 async function getAllUsers(req, res, next) {
   try {
     const users = await User.findAll({
@@ -232,7 +149,6 @@ async function updateUser(req, res, next) {
 module.exports = {
   getMe,
   getUserById,
-  createUser,
   getAllUsers,
   updateUser,
   deleteUser,
