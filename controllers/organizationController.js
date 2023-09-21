@@ -3,10 +3,11 @@ const Organization = require('../models/organization.model');
 const LunchWallet = require('../models/org_lunch_wallet.model');
 const { createCustomError } = require('../errors/custom-errors');
 const orgInvites = require('../models/organisation_invite.model');
-const {
-  generateUniqueToken,
-  sendInvitationEmail,
-} = require('../utils/sendOTP');
+
+const { generateUniqueToken, sendInvitationEmail } = {
+  generateUniqueToken: '',
+  sendInvitationEmail: '',
+};
 
 // Create a new organization and user (Admin user only)
 const createOrganization = async (req, res, next) => {

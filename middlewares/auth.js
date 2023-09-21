@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
-const { createCustomError } = require('../errors/custom-errors')
+const { createCustomError } = require('../errors/custom-errors');
 
 async function auth(req, res, next) {
   try {
@@ -18,7 +18,7 @@ async function auth(req, res, next) {
     req.user = user.dataValues;
     req.token = token;
   } catch (error) {
-    next(error)
+    next(error);
   }
 }
 
