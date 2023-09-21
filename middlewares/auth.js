@@ -17,6 +17,7 @@ async function auth(req, res, next) {
 
     req.user = user.dataValues;
     req.token = token;
+    next();
   } catch (error) {
     next(error);
   }
