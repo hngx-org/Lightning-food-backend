@@ -1,46 +1,44 @@
-const { DataTypes, Sequelize } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const User = require('./user.model');
+const sequelize = require('../db/db');
 
-module.exports = (sequelize) => {
-  const Withdrawal = sequelize.define(
-    'Withdrawal',
-    {
-      id: {
-        type: DataTypes.UUID,
-        defaultValue: Sequelize.UUIDV4,
-        allowNull: false,
-        primaryKey: true,
-      },
-      user_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-          model: User,
-          key: 'id',
-        },
-        onDelete: 'CASCADE',
-      },
-      status: {
-        type: DataTypes.ENUM('redeemed', 'not_redeemed'),
-        allowNull: false,
-      },
-      amount: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false,
-      },
-      is_deleted: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-      },
+const Withdrawal = sequelize.define(
+  'Withdrawal',
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
     },
-    {
-      tableName: 'withdrawals',
-      createdAt: 'created_at',
-      updatedAt: 'updated_at',
+    user_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: User,
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
     },
-  );
+    status: {
+      type: DataTypes.ENUM('redeemed', 'not_redeemed'),
+      allowNull: false,
+    },
+    amount: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+    },
+    is_deleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+  },
+  {
+    tableName: 'withdrawals',
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+  },
+);
 
-  Withdrawal.belongsTo(User);
+Withdrawal.belongsTo(User);
 
-  return Withdrawal;
-};
+module.exports = Withdrawal;

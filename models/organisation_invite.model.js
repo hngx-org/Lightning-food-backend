@@ -1,7 +1,10 @@
 const { DataTypes } = require('sequelize');
+const sequelize = require('../db/db');
+const Organization = require('./organization.model');
 
-module.exports = (sequelize) => {
-  const orgInvites = sequelize.define('OrgInvites', {
+const orgInvites = sequelize.define(
+  'OrgInvites',
+  {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -15,12 +18,26 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    expirationTimestamp: {
+    ttl: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP + INTERVAL 1 DAY'),
     },
-  });
+    org_id: {
+      type: DataTypes.UUID,
+      references: { model: Organization, key: 'id' },
+      onDelete: 'CASCADE',
+    },
+    is_deleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+  },
+  {
+    tableName: 'organization_invites',
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+  },
+);
 
-  return orgInvites;
-};
+module.exports = orgInvites;

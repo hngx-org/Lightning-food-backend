@@ -7,7 +7,7 @@ async function auth(req, res, next) {
 
     const decoded = jwt.decode(token, process.env.JWT_SIGNATURE);
 
-    const user = await User.findOne({ where: { id: decoded.id } });
+    const user = await User.findByPk(decoded.id);
 
     if (!user) {
       //this should be updated after custom errors have been implemented
@@ -17,7 +17,7 @@ async function auth(req, res, next) {
     req.user = user.dataValues;
     req.token = token;
   } catch (error) {
-    console.log(error.message);
+    next(error);
     //switch to  next(error) after error middleware have been created
   }
 }
