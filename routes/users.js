@@ -8,6 +8,9 @@ const {
   updateUser,
   deleteUser,
 } = require('../controllers/userController');
+const { auth } = require('../middlewares/auth');
+
+router.use(auth);
 
 router.get('/users/me', getMe);
 router.get('/users/:id', getUserById);
