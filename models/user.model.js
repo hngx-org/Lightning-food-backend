@@ -1,3 +1,4 @@
+/* eslint-disable node/no-unsupported-features/es-syntax */
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db/db');
 
@@ -44,9 +45,10 @@ const User = sequelize.define(
       type: DataTypes.UUID,
       references: { model: Organization, key: 'id' },
     },
+
     lunch_credit_balance: {
-      type: DataTypes.STRING,
-      defaultValue: '1000'
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
     },
     refresh_token: {
       type: DataTypes.STRING,
@@ -83,5 +85,11 @@ User.belongsTo(Organization, {
   foreignKey: 'org_id',
   as: 'organization',
 });
+
+User.prototype.toJSON = function () {
+  const values = { ...this.get() };
+  delete values.password_hash;
+  return values;
+};
 
 module.exports = User;

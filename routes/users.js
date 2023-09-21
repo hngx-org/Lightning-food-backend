@@ -1,19 +1,25 @@
 const express = require('express');
 
 const router = express.Router();
-const { getUserById } = require('../controllers/userController');
-const { createUser } = require('../controllers/userController');
+const {
+  getMe,
+  getUserById,
+  createUser,
+  getAllUsers,
+  updateUser,
+  deleteUser,
+} = require('../controllers/userController');
+const loginController = require('../controllers/userLoginController');
+const logoutController = require('../controllers/userLogoutController');
 
-/* GET users listing. */
-router.get('/', (req, res) => {
-  res.send('respond with a resource');
-});
-
-// GET get user or staff details by ID
-router.get('/:id', getUserById);
-
-// Create a new user
-router.post('/api/register', createUser);
+router.post('/auth/signup', createUser);
+router.post('/auth/login', loginController);
+router.post('/auth/logout', logoutController);
+router.get('/users/me', getMe);
+router.get('/users/:id', getUserById);
+router.get('/users/', getAllUsers);
+router.put('/users/:id', updateUser);
+router.delete('/users/:id', deleteUser);
 
 module.exports = router;
 

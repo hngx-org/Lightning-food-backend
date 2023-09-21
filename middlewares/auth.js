@@ -8,7 +8,7 @@ async function auth(req, res, next) {
 
     const decoded = jwt.decode(token, process.env.JWT_SIGNATURE);
 
-    const user = await User.findOne({ where: { id: decoded.id } });
+    const user = await User.findByPk(decoded.id);
 
     if (!user) {
       //this should be updated after custom errors have been implemented
