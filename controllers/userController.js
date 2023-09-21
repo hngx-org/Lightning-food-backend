@@ -1,18 +1,10 @@
+/* eslint-disable camelcase */
 const User = require('../models/user.model'); //import user model
+const { createCustomError } = require('../errors/custom-errors');
 
-// Controller function to get user/staff details by UUID
-async function getUserById(req, res) {
+async function getMe(req, res, next) {
   try {
-    const userId = req.params.id;
-    const user = await User.findOne({ where: { id: userId } });
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found',
-        data: null,
-      });
-    }
+    const user = await User.findOne({ where: { id: req.user.id } });
 
     res.status(200).json({
       success: true,
@@ -30,6 +22,134 @@ async function getUserById(req, res) {
   }
 }
 
+async function getUserById(req, res, next) {
+  try {
+    const userId = req.params.id;
+    const user = await User.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw createCustomError('User not found', 404);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'User found',
+      data: {
+        user: user,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// Controllers Function to register new user
+async function getAllUsers(req, res, next) {
+  try {
+    const users = await User.findAll({
+      where: { org_id: req.user.org_id },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'List of all users',
+      data: {
+        users: users,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Internal Server Error',
+      data: null,
+    });
+  }
+}
+async function deleteUser(req, res, next) {
+  try {
+    const userId = req.params.id;
+
+    // Check if the user exists
+    const user = await User.findOne({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+        data: null,
+      });
+    }
+
+    // Delete the user
+    await user.destroy();
+
+    res.status(200).json({
+      success: true,
+      message: 'User deleted successfully',
+      data: null,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Internal Server Error',
+      data: null,
+    });
+  }
+}
+
+async function updateUser(req, res, next) {
+  try {
+    const userId = req.params.id;
+    const {
+      first_name,
+      last_name,
+      email,
+      profile_pic,
+      bank_name,
+      bank_code,
+      bank_number,
+    } = req.body;
+
+    // Check if the user exists
+    const user = await User.findOne({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+        data: null,
+      });
+    }
+
+    // Update user's information
+    user.first_name = first_name || user.first_name;
+    user.last_name = last_name || user.last_name;
+    user.email = email || user.email;
+    user.profile_pic = profile_pic || user.profile_pic;
+    user.bank_name = bank_name || user.bank_name;
+    user.bank_code = bank_code || user.bank_code;
+    user.bank_number = bank_number || user.bank_number;
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'User updated successfully',
+      data: {
+        user: user,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Internal Server Error',
+      data: null,
+    });
+  }
+}
+
 module.exports = {
+  getMe,
   getUserById,
+  getAllUsers,
+  updateUser,
+  deleteUser,
 };

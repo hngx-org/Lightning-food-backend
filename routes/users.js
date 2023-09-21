@@ -1,15 +1,19 @@
 const express = require('express');
 
 const router = express.Router();
-const { getUserById } = require('../controllers/userController');
+const {
+  getMe,
+  getUserById,
+  getAllUsers,
+  updateUser,
+  deleteUser,
+} = require('../controllers/userController');
 
-/* GET users listing. */
-router.get('/', (req, res, next) => {
-  res.send('respond with a resource');
-});
-
-// GET get user or staff details by ID
-router.get('/:id', getUserById);
+router.get('/users/me', getMe);
+router.get('/users/:id', getUserById);
+router.get('/users/', getAllUsers);
+router.put('/users/:id', updateUser);
+router.delete('/users/:id', deleteUser);
 
 module.exports = router;
 

@@ -2,15 +2,20 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../db/db');
 
 const User = require('./user.model');
+const Organization = require('./organization.model');
 
-const Launch = sequelize.define(
-  'Launch',
+const Lunch = sequelize.define(
+  'Lunch',
   {
     id: {
       primaryKey: true,
       type: DataTypes.UUID,
       allowNull: false,
       defaultValue: DataTypes.UUIDV4,
+    },
+    org_id: {
+      type: DataTypes.UUID,
+      references: { model: Organization, key: 'id' },
     },
     senderId: {
       type: DataTypes.UUID,
@@ -34,17 +39,17 @@ const Launch = sequelize.define(
       type: DataTypes.TEXT,
     },
   },
-  { tableName: 'launches', createdAt: 'created_at', updatedAt: false },
+  { tableName: 'lunches', createdAt: 'created_at', updatedAt: false },
 );
 // foreign key to user from receiver to allow usage like
-// launch.user
-Launch.belongsTo(User, {
+// lunch.user
+Lunch.belongsTo(User, {
   foreignKey: 'recieverId',
 });
 
 // foreign key to user from sender to allow usage like
-// launch.user
-Launch.belongsTo(User, {
+// lunch.user
+Lunch.belongsTo(User, {
   foreignKey: 'senderId',
 });
-module.exports = Launch;
+module.exports = Lunch;
