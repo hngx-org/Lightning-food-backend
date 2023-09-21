@@ -68,4 +68,30 @@ async function sendInvite(req, res, next) {
   }
 }
 
-module.exports = { sendInvite, createOrganization };
+/**
+ * Updates the organizational detail
+ * @reaquires payload {"name":"org name", "lunch_price":100, "currency": "USD"}
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @param {*} next
+ */
+const updateOrgDetails = async (req, res) => {
+  const { name, lunchPrize, currency } = req.body;
+  const { isAdmin, org_id } = req.user;
+
+  if (!isAdmin) {
+    throw createCustomError('This user is not an admin', 403);
+  }
+
+  const organization = await Organization.findByPk(org_id);
+
+  organization.update({
+    name: name,
+    lunch_prize: lunchPrize,
+    currency: currency,
+  });
+
+  res.json(organization).status(201);
+};
+
+module.exports = { sendInvite, createOrganization, updateOrgDetails };
