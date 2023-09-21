@@ -6,6 +6,7 @@ const errorHandlerMiddleware = require('./middlewares/error-handler');
 const userRoutes = require('./routes/users');
 const orgRoutes = require('./routes/orgRoutes');
 const lunchRoutes = require('./routes/lunchRoutes');
+const authRoutes = require('./routes/auth.route');
 const sequelize = require('./db/db');
 
 const app = express();
@@ -15,13 +16,14 @@ app.use(express.json());
 app.use(helmet());
 const PORT = process.env.PORT || 4000;
 
-app.use('/api/organization', orgRoutes);
 app.use('/api/', userRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/organization', orgRoutes);
 app.use('/api/lunch', lunchRoutes);
 
 // Middlewares
-app.use(notFound);
 app.use(errorHandlerMiddleware);
+app.use(notFound);
 
 sequelize.sync().then(() => {
   // Remove console.log() before production
