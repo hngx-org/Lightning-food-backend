@@ -1,9 +1,10 @@
 const express = require('express');
 
 const router = express.Router();
-const lunchControllers = require('../controllers/lunchControllers');
+const { sendLunch, getAllLunch } = require('../controllers/lunchControllers');
 
 //GET all available lunches for a user
-router.get('/user/:userId/lunch/all', lunchControllers.getAllLunch);
+router.get('/lunch/all', getAllLunch);
+router.post('/lunch/send', sendLunch);
 
 module.exports = router;

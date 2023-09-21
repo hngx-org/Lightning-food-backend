@@ -6,6 +6,7 @@ const userRoutes = require('./routes/users');
 const orgRoutes = require('./routes/orgRoutes');
 const lunchRoutes = require('./routes/lunchRoutes');
 const sequelize = require('./db/db');
+const auth = require('./middlewares/auth');
 
 const app = express();
 
@@ -15,8 +16,8 @@ app.use(express.json());
 const PORT = process.env.PORT || 4000;
 
 app.use('/api/organization', orgRoutes);
-app.use('/api/', userRoutes);
-app.use('/api/lunch', lunchRoutes);
+app.use('/api', userRoutes);
+app.use('/api', auth, lunchRoutes);
 
 // Middlewares
 app.use(notFound);
