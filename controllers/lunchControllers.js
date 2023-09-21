@@ -1,6 +1,7 @@
 const { Op } = require('sequelize');
 const Lunch = require('../models/lunches.model');
 const User = require('../models/user.model');
+const Withdrawals = require('../models/withdrawals.model.js'); 
 
 //GET endpoint to retrieve all available lunches for a user
 const getAllLunch = async (req, res) => {
@@ -76,4 +77,53 @@ const sendLunch = async (req, res) => {
   }
 };
 
-module.exports = { getAllLunch, sendLunch };
+
+async function redeemGiftController(req, res) {
+  try {
+
+    const { bank_number, bank_name, bank_code, amount, email } = req.body;
+
+    if ( !bank_number || !bank_name || !bank_code || !amount || !email ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide all required fields',
+      });
+    }
+
+    const userWithdrawing = await User.findOne({where: {bank_number}})
+
+    await userWithdrawing.decrement('lunch_credit_balance :', { by: amount });
+    await userWithdrawing.save();
+    const newEntry = await Withdrawals.create({
+      id,
+      user_id : userWithdrawing.id,
+      amount,
+      status : "success"
+    });
+
+    const sender = await User.findOne({ where: { email } });
+    const senderLunchEntry = await Lunch.findOne({ where: {senderId : sender.id}})
+    await senderLunchEntry.update({redeemed: true});
+    await senderLunchEntry.save();
+
+
+    res.status(201).json({
+      message: "Withdrawal request created successfully",
+      statusCode: 201,
+      data: {
+       id: newEntry.id,
+       user_id: User.id,
+       status: success,
+       amount,
+       created_at: newEntry.created_at
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Internal Server Error',
+      data: null,
+    });
+  }
+}
+    module.exports = { getAllLunch, sendLunch, redeemGiftController };
