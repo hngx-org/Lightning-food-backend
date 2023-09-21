@@ -8,6 +8,6 @@ const { giftLunch } = require('../controllers/giftLunchController');
 router.get('/user/:userId/lunch/all', lunchControllers.getAllLunch);
 
 // Gift Launch
-router.post('/gift_lunch', giftLunch)
+router.post('/gift_lunch', giftLunch);
 
 module.exports = router;
