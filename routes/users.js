@@ -15,6 +15,10 @@ router.get('/users/', getAllUsers);
 router.put('/users/:id', updateUser);
 router.delete('/users/:id', deleteUser);
 
+// forgot password
+router.post('/users/forgot-password', forgotPassword);
+router.post('/users/reset-password', resetPassword);
+
 module.exports = router;
 
 //I think the user routes should be named userRoutes.js instead of users.js
