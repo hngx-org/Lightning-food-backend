@@ -7,13 +7,22 @@ const {
   getAllUsers,
   updateUser,
   deleteUser,
+  forgotPassword,
+  resetPassword,
 } = require('../controllers/userController');
+const { auth } = require('../middlewares/auth');
+
+router.use(auth);
 
 router.get('/users/me', getMe);
 router.get('/users/:id', getUserById);
 router.get('/users/', getAllUsers);
 router.put('/users/:id', updateUser);
 router.delete('/users/:id', deleteUser);
+
+// forgot password
+router.post('/users/forgot-password', forgotPassword);
+router.post('/users/reset-password', resetPassword);
 
 module.exports = router;
 

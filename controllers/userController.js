@@ -146,10 +146,62 @@ async function updateUser(req, res, next) {
   }
 }
 
+async function forgotPassword(req, res, next) {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(404).json({
+      success: false,
+      message: 'User not found',
+    });
+  }
+
+  const user = await User.findOne({ where: { email } });
+  if (!user) {
+    throw createCustomError('Invalid credentials', 404);
+  }
+
+  const response = await sendUserOtp(user.id, email);
+
+  let status = 500;
+  if (response.status === true) {
+    status = 202;
+  }
+  res.status(500).json(response);
+}
+
+async function resetPassword() {
+  const { email, otp, password } = req.body;
+  if (!(email && otp && password)) {
+    return res.status(404).json({
+      success: false,
+      message: 'User not found',
+    });
+  }
+
+  const user = await User.findOne({ where: { email } });
+  if (!user) {
+    throw createCustomError('Invalid credentials', 404);
+  }
+
+  // const response = await verifyOtp(user.id, otp)
+
+  // update password
+  user.password = password;
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: 'Password reset successfully',
+    data: null,
+  });
+}
+
 module.exports = {
   getMe,
   getUserById,
   getAllUsers,
   updateUser,
   deleteUser,
+  forgotPassword,
+  resetPassword,
 };
