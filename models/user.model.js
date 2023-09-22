@@ -8,18 +8,15 @@ const User = sequelize.define(
   'User',
   {
     id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       primaryKey: true,
-      allowNull: false,
-      defaultValue: DataTypes.UUIDV4,
+      autoIncrement: true,
     },
     first_name: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     last_name: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     email: {
       type: DataTypes.STRING,
@@ -31,7 +28,7 @@ const User = sequelize.define(
       allowNull: false,
     },
     phone: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(20),
       unique: true,
     },
     is_admin: {
@@ -42,7 +39,7 @@ const User = sequelize.define(
       type: DataTypes.STRING,
     },
     org_id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       references: { model: Organization, key: 'id' },
     },
     lunch_credit_balance: {
@@ -65,12 +62,16 @@ const User = sequelize.define(
       type: DataTypes.STRING,
     },
     currency_code: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(4),
       defaultValue: 'NGN',
     },
     currency: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(128),
       defaultValue: 'Naira',
+    },
+    is_deleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
   {
@@ -91,7 +92,4 @@ User.prototype.toJSON = function () {
   return values;
 };
 
-(async () => {
-  await User.sync({ alter: true });
-})();
 module.exports = User;

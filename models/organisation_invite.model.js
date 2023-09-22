@@ -6,8 +6,8 @@ const orgInvites = sequelize.define(
   'OrgInvites',
   {
     id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
       primaryKey: true,
     },
     email: {
@@ -21,10 +21,10 @@ const orgInvites = sequelize.define(
     ttl: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.literal('CURRENT_TIMESTAMP + INTERVAL 1 DAY'),
+      defaultValue: () => new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
     },
     org_id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       references: { model: Organization, key: 'id' },
       onDelete: 'CASCADE',
     },

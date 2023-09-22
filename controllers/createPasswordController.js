@@ -1,13 +1,13 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
-const { createCustomError } = require('../Errors/custom-errors');
+const { createCustomError } = require('../errors/custom-errors');
 
 const createPasswordController = async (req, res, next) => {
-  const user = req.user;
-  const { confirm_password, password } = req.body;
+  const { user } = req;
+  const { confirmPassword, password } = req.body;
 
   try {
-    if (confirm_password !== password) {
+    if (confirmPassword !== password) {
       const passwordMismatchError = createCustomError(
         'Passwords do not match',
         400,
@@ -15,7 +15,7 @@ const createPasswordController = async (req, res, next) => {
       return next(passwordMismatchError);
     }
 
-    if (!confirm_password || !password) {
+    if (!confirmPassword || !password) {
       const missingFieldsError = createCustomError(
         'Fill all required fields',
         400,

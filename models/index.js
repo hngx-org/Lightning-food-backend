@@ -1,10 +1,10 @@
-const Sequelize = require("sequelize");
+const Sequelize = require('sequelize');
 
 const connection = new Sequelize({
-  dialect: "mysql",
+  dialect: 'mysql',
 });
 
-const Lunch = connection.define("Lunch", {
+const Lunch = connection.define('Lunch', {
   id: {
     type: Sequelize.UUID,
     primaryKey: true,
@@ -13,22 +13,22 @@ const Lunch = connection.define("Lunch", {
   org_id: {
     type: Sequelize.TEXT,
     references: {
-      model: "Users",
-      key: "org_id",
+      model: 'Users',
+      key: 'org_id',
     },
   },
-  senderId: {
+  sender_id: {
     type: Sequelize.TEXT,
     references: {
-      model: "Users",
-      key: "id",
+      model: 'Users',
+      key: 'id',
     },
   },
-  receiverId: {
+  receiver_id: {
     type: Sequelize.TEXT,
     references: {
-      model: "Users",
-      key: "id",
+      model: 'Users',
+      key: 'id',
     },
   },
   quantity: {

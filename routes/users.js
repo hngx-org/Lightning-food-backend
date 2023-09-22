@@ -7,22 +7,28 @@ const {
   getUserById,
   getAllUsers,
   updateUser,
+  forgotPassword,
+  resetPassword,
   deleteUser,
 } = require('../controllers/userController');
-const { auth } = require('../middlewares/auth');
+const { auth, adminUser } = require('../middlewares/auth');
+
+// forgot password
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password', resetPassword);
 
 router.use(auth);
 
-router.get('/users/me', getMe);
-router.get('/users/:id', getUserById);
+router.get('/me', getMe);
+router.get('/:id', getUserById);
+router.get('/', getAllUsers);
+router.put('/:id', updateUser);
 router.patch('/update-password', createPasswordController);
-router.get('/users/', getAllUsers);
-router.put('/users/:id', updateUser);
-router.delete('/users/:id', deleteUser);
 
-// forgot password
-router.post('/users/forgot-password', forgotPassword);
-router.post('/users/reset-password', resetPassword);
+
+router.use(adminUser);
+
+router.delete('/:id', deleteUser);
 
 module.exports = router;
 

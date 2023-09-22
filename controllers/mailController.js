@@ -39,7 +39,7 @@ const otpMessage = (otp, timeLeft) => {
 // Function to send email with otp code
 const sendEmail = async (email, message) => {
   const mailOptions = {
-    from: 'team.lightning.hng@gmail.com', //This should be in environement variable
+    from: process.env.MAIL_USER, //This should be in environement variable
     subject: 'Verify your email',
     to: email,
     html: message,

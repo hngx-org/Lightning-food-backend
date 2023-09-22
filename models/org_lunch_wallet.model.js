@@ -1,22 +1,23 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db/db');
+const Organization = require('./organization.model');
 
 const OrgLunchWallet = sequelize.define(
   'OrgLunchWallet',
   {
     id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
       primaryKey: true,
     },
     balance: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL(10, 2),
       defaultValue: 1000,
+      allowNull: false,
     },
     org_id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      allowNull: false,
+      type: DataTypes.INTEGER,
+      references: { model: Organization, key: 'id' },
     },
   },
   {

@@ -7,6 +7,7 @@ const userRoutes = require('./routes/users');
 const orgRoutes = require('./routes/orgRoutes');
 const lunchRoutes = require('./routes/lunchRoutes');
 const authRoutes = require('./routes/auth.route');
+const withDrawalRoute = require('./routes/withdraw.route');
 const sequelize = require('./db/db');
 
 const app = express();
@@ -16,10 +17,11 @@ app.use(express.json());
 app.use(helmet());
 const PORT = process.env.PORT || 4000;
 
-app.use('/api/', userRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/organization', orgRoutes);
 app.use('/api/lunch', lunchRoutes);
+app.use('/api/withdrawals', withDrawalRoute);
 
 // Middlewares
 app.use(errorHandlerMiddleware);
@@ -32,3 +34,5 @@ sequelize.sync().then(() => {
     console.log(`Server is running on port ${PORT}`);
   });
 });
+
+module.exports = app; //for testing

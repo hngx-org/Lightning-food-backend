@@ -3,11 +3,7 @@ const Organization = require('../models/organization.model');
 const LunchWallet = require('../models/org_lunch_wallet.model');
 const { createCustomError } = require('../errors/custom-errors');
 const orgInvites = require('../models/organisation_invite.model');
-
-const { generateUniqueToken, sendInvitationEmail } = {
-  generateUniqueToken: '',
-  sendInvitationEmail: '',
-};
+const transporter = require('../middlewares/emailConfig');
 
 // Create a new organization and user (Admin user only)
 const createOrganization = async (req, res, next) => {
@@ -41,22 +37,33 @@ const createOrganization = async (req, res, next) => {
   }
 };
 
-async function sendInvite(req, res, next) {
+const sendInviteCode = async (req, res, next) => {
   try {
     const { email, organizationId } = req.body;
 
-    // Generate a unique token for the invitation (you can use a library like `uuid` for this)
-    const invitationToken = generateUniqueToken();
+    // Generate a random verification code
+    const verificationCode = Math.floor(
+      100000 + Math.random() * 900000,
+    ).toString();
 
     // Save the invitation details in the database
+    console.log(email);
     await orgInvites.create({
-      email,
-      token: invitationToken,
-      organization_id: organizationId,
+      email: email,
+      token: verificationCode,
+      org_id: organizationId,
     });
 
-    // Send an email to the user with the invitation link (including the token)
-    await sendInvitationEmail(email, invitationToken);
+    // Send an email with the verification code
+    const mailOptions = {
+      from: process.env.MAIL_USER, // Your email address
+      to: email, // User's email address
+      subject: 'Email Verification',
+      text: `Your verification code is: ${verificationCode}`,
+    };
+
+    // Send the email
+    await transporter.sendMail(mailOptions);
 
     res.status(200).json({
       success: true,
@@ -66,7 +73,63 @@ async function sendInvite(req, res, next) {
   } catch (error) {
     next(error);
   }
-}
+};
+
+const confirmInviteCode = async (req, res, next) => {
+  try {
+    const { verificationCode } = req.body;
+
+    // Validate email and verification code
+    if (!verificationCode) {
+      return res.status(400).json({
+        success: false,
+        message: 'Verification code is required.',
+        data: null,
+      });
+    }
+
+    const invite = await orgInvites.findOne({
+      where: { token: verificationCode },
+    });
+
+    if (invite) {
+      res.email = invite.email;
+      res.org_id = invite.org_id;
+      res.status(200).json({
+        success: true,
+        message: 'Token verified',
+        data: {
+          org_id: invite.org_id,
+          email: invite.email,
+        },
+      });
+    } else {
+      createCustomError('Invalid verification code', 400);
+    }
+
+    // // Verifing the verification code against the stored code in your database
+    // const user = await orgInvites.findOne({
+    //   where: { email, token: verificationCode },
+    // });
+
+    // if (!user || user.token !== verificationCode) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: 'Invalid email or verification code.',
+    //     data: null,
+    //   });
+    // }
+
+    // // Mark the email as verified
+    // user.email = true;
+    // user.token = null; // Optional, clear the verification code from the database or not
+    // //  There is supposed to be a field where we set the state to be true once token is validated
+
+    // await user.save();
+  } catch (error) {
+    next(error);
+  }
+};
 
 /**
  * Updates the organizational detail
@@ -78,9 +141,9 @@ async function sendInvite(req, res, next) {
 const updateOrgDetails = async (req, res, next) => {
   try {
     const { name, lunchPrize, currency } = req.body;
-    const { isAdmin, org_id } = req.user;
+    const { is_admin, org_id } = req.user;
 
-    if (!isAdmin) {
+    if (!is_admin) {
       throw createCustomError('This user is not an admin', 403);
     }
 
@@ -98,4 +161,9 @@ const updateOrgDetails = async (req, res, next) => {
   }
 };
 
-module.exports = { sendInvite, createOrganization, updateOrgDetails };
+module.exports = {
+  sendInviteCode,
+  confirmInviteCode,
+  createOrganization,
+  updateOrgDetails,
+};

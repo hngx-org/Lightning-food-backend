@@ -9,31 +9,29 @@ const Lunch = sequelize.define(
   {
     id: {
       primaryKey: true,
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
       allowNull: false,
-      defaultValue: DataTypes.UUIDV4,
     },
     org_id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       references: { model: Organization, key: 'id' },
     },
-    senderId: {
-      type: DataTypes.UUID,
+    sender_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       references: { model: User, key: 'id' },
     },
-    receiverId: {
-      type: DataTypes.UUID,
+    receiver_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       references: { model: User, key: 'id' },
     },
     quantity: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     redeemed: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
     },
     note: {
       type: DataTypes.TEXT,
@@ -44,12 +42,12 @@ const Lunch = sequelize.define(
 // foreign key to user from receiver to allow usage like
 // lunch.user
 Lunch.belongsTo(User, {
-  foreignKey: 'recieverId',
+  foreignKey: 'receiver_id',
 });
 
 // foreign key to user from sender to allow usage like
 // lunch.user
 Lunch.belongsTo(User, {
-  foreignKey: 'senderId',
+  foreignKey: 'sender_id',
 });
 module.exports = Lunch;
