@@ -2,7 +2,7 @@ const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
 const URI = process.env.MYSQL_ADDON_URI;
-console.log(URI);
+
 const sequelize = new Sequelize(URI, { dialect: 'mysql', logging: false });
 
 //The below is for local connection
