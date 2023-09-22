@@ -1,4 +1,4 @@
-ro/* eslint-disable camelcase */
+/* eslint-disable camelcase */
 const { Op } = require('sequelize');
 const Lunch = require('../models/lunches.model');
 const User = require('../models/user.model');
