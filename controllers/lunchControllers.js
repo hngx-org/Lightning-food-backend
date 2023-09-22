@@ -1,7 +1,8 @@
+/* eslint-disable camelcase */
 const { Op } = require('sequelize');
 const Lunch = require('../models/lunches.model');
 const User = require('../models/user.model');
-const Withdrawals = require('../models/withdrawals.model.js'); 
+const Withdrawals = require('../models/withdrawals.model');
 
 //GET endpoint to retrieve all available lunches for a user
 const getAllLunch = async (req, res) => {
@@ -77,46 +78,47 @@ const sendLunch = async (req, res) => {
   }
 };
 
-
 async function redeemGiftController(req, res) {
   try {
-
+    const { id } = req.user;
     const { bank_number, bank_name, bank_code, amount, email } = req.body;
 
-    if ( !bank_number || !bank_name || !bank_code || !amount || !email ) {
+    if (!bank_number || !bank_name || !bank_code || !amount || !email) {
       return res.status(400).json({
         success: false,
         message: 'Please provide all required fields',
       });
     }
 
-    const userWithdrawing = await User.findOne({where: {bank_number}})
+    const userWithdrawing = await User.findOne({ where: { bank_number } }); // for-refactoring find by email
+    // validate user with bank if null save bank details to user table
 
     await userWithdrawing.decrement('lunch_credit_balance :', { by: amount });
     await userWithdrawing.save();
     const newEntry = await Withdrawals.create({
       id,
-      user_id : userWithdrawing.id,
+      user_id: userWithdrawing.id,
       amount,
-      status : "success"
+      status: 'success',
     });
 
     const sender = await User.findOne({ where: { email } });
-    const senderLunchEntry = await Lunch.findOne({ where: {senderId : sender.id}})
-    await senderLunchEntry.update({redeemed: true});
+    const senderLunchEntry = await Lunch.findOne({
+      where: { senderId: sender.id },
+    });
+    await senderLunchEntry.update({ redeemed: true });
     await senderLunchEntry.save();
 
-
     res.status(201).json({
-      message: "Withdrawal request created successfully",
+      message: 'Withdrawal request created successfully',
       statusCode: 201,
       data: {
-       id: newEntry.id,
-       user_id: User.id,
-       status: success,
-       amount,
-       created_at: newEntry.created_at
-      }
+        id: newEntry.id,
+        user_id: User.id,
+        status: 'success',
+        amount,
+        created_at: newEntry.created_at,
+      },
     });
   } catch (error) {
     return res.status(500).json({
@@ -127,4 +129,22 @@ async function redeemGiftController(req, res) {
   }
 }
 
-module.exports = { getAllLunch, sendLunch, redeemGiftController };
+async function getLunchDetailsByUserId(req, res, next) {
+  try {
+    const userId = req.params.userId;
+    // Use Sequelize to find the user's lunch details based on the provided user ID
+    const lunchDetails = await Lunch.findOne({ where: { userId } });
+
+    if (!lunchDetails) {
+      // If no lunch details found for the user, return a 404 response
+      return res.status(404).json({ error: 'Lunch details not found for this user.' });
+    }
+
+    // Return the lunch details as JSON
+    res.json({ userId, lunchDetails });
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = { getAllLunch, sendLunch, redeemGiftController, getLunchDetailsByUserId };

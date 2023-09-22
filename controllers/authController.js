@@ -6,7 +6,7 @@ const { createCustomError } = require('../errors/custom-errors');
 const Organization = require('../models/organization.model');
 const OrgLunchWallet = require('../models/org_lunch_wallet.model');
 const Invite = require('../models/organisation_invite.model');
-const { sendUserOtp } = require('./mailController');
+// const { sendUserOtp } = require('./mailController');
 
 const secretKey = process.env.JWT_SECRET_KEY;
 

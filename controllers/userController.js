@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 const User = require('../models/user.model'); //import user model
 const { createCustomError } = require('../errors/custom-errors');
+const { sendUserOtp } = require('./mailController');
 
 async function getMe(req, res, next) {
   try {
@@ -166,10 +167,11 @@ async function forgotPassword(req, res, next) {
   if (response.status === true) {
     status = 202;
   }
-  res.status(500).json(response);
+
+  res.status(status).json(response);
 }
 
-async function resetPassword() {
+async function resetPassword(req, res) {
   const { email, otp, password } = req.body;
   if (!(email && otp && password)) {
     return res.status(404).json({
