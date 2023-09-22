@@ -33,7 +33,11 @@ const getAllLunch = async (req, res) => {
       data: allLunches,
     });
   } catch (error) {
-    return next(error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal Server Error',
+      data: null,
+    });
   }
 };
 
@@ -73,7 +77,7 @@ const sendLunch = async (req, res) => {
 
     // Check if the sender has enough balance
     if (sender.lunch_credit_balance < totalLunchPrice) {
-      throw createCustomError('Insufficient Balance', 401);
+      throw createCustomError('Insufficient balance.', 401);
     }
     // Debit the sender's balance
     await sender.update({
@@ -105,7 +109,11 @@ const sendLunch = async (req, res) => {
       data: lunch,
     });
   } catch (error) {
-    return next(error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal Server Error',
+      data: null,
+    });
   }
 };
 
@@ -115,7 +123,10 @@ async function redeemGiftController(req, res) {
     const { bank_number, bank_name, bank_code, amount, email } = req.body;
 
     if (!bank_number || !bank_name || !bank_code || !amount || !email) {
-      throw createCustomError('Please provide all required fields', 400);
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide all required fields',
+      });
     }
 
     const userWithdrawing = await User.findOne({ where: { bank_number } }); // for-refactoring find by email
@@ -149,7 +160,11 @@ async function redeemGiftController(req, res) {
       },
     });
   } catch (error) {
-    return next(error)
+    return res.status(500).json({
+      success: false,
+      message: 'Internal Server Error',
+      data: null,
+    });
   }
 }
 
@@ -161,13 +176,15 @@ async function getLunchDetailsByUserId(req, res, next) {
 
     if (!lunchDetails) {
       // If no lunch details found for the user, return a 404 response
-      throw createCustomError('Lunch details not found for this user.', 404);
+      return res
+        .status(404)
+        .json({ error: 'Lunch details not found for this user.' });
     }
 
     // Return the lunch details as JSON
     res.json({ userId, lunchDetails });
   } catch (error) {
-    return next(error);
+    next(error);
   }
 }
 
@@ -185,7 +202,7 @@ async function getLunchDetail(req, res, next) {
     // Return the lunch details as JSON
     res.json({ lunchDetails });
   } catch (error) {
-    return next(error);
+    next(error);
   }
 }
 
