@@ -1,4 +1,4 @@
-const { Op } = require('sequelize');
+// const { Op } = require('sequelize');
 const Lunch = require('../models/lunches.model');
 const User = require('../models/user.model');
 const response = require('../utils/response');
@@ -9,11 +9,15 @@ const giftLunch = async (req, res) => {
 
     const { receiverId, quantity, note } = req.body;
 
-    if (!receiverId || !quantity || !note) return res.status(400).json(response(false, 'Missing required fields', null));
+    if (!receiverId || !quantity || !note)
+      return res
+        .status(400)
+        .json(response(false, 'Missing required fields', null));
 
     const user = await User.findOne({ where: { id: userId } });
 
-    if (!user) return res.status(404).json(response(false, 'User does not exist', null));
+    if (!user)
+      return res.status(404).json(response(false, 'User does not exist', null));
 
     const lunch = { receiverId, quantity, note, redeemed: false };
 
@@ -30,10 +34,10 @@ const giftLunch = async (req, res) => {
     //Update the receiver's balance
     await receiver.update({ balance: receiver.balance + quantity });
 
-    return res.status(201).json(response(true, 'Lunch gifted successfully', { lunch: newLunch }));
-
+    return res
+      .status(201)
+      .json(response(true, 'Lunch gifted successfully', { lunch: newLunch }));
   } catch (error) {
-    
     return res.status(500).json(response(false, 'Internal Server Error', null));
   }
 };
