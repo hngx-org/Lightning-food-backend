@@ -35,12 +35,7 @@ async function withdrawCashController(req, res, next) {
       status: 'redeemed',
       amount,
     });
-    // const sender = await User.findOne({ where: { email } });
-    // const senderLunchEntry = await Lunch.findOne({
-    //   where: { senderId: sender.id },
-    // });
-    // await senderLunchEntry.update({ redeemed: true });
-    // await senderLunchEntry.save();
+    
 
     res.status(201).json({
       message: 'Withdrawal request created successfully',

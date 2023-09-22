@@ -4,6 +4,7 @@ const Lunch = require('../models/lunches.model');
 const User = require('../models/user.model');
 const Withdrawals = require('../models/withdrawals.model');
 const { createCustomError } = require('../errors/custom-errors');
+const Organization = require('../models/organization.model');
 
 //GET endpoint to retrieve all available lunches for a user
 const getAllLunch = async (req, res) => {
@@ -13,7 +14,7 @@ const getAllLunch = async (req, res) => {
     //Query the lunch model to find available lunches for the user
     const allLunches = await Lunch.findAll({
       where: {
-        [Op.or]: [{ senderId: userId }, { receiverId: userId }], //User is either the sender or receiver
+        [Op.or]: [{ sender_id: userId }, { receiver_id: userId }], //User is either the sender or receiver
       },
     });
 
@@ -34,36 +35,73 @@ const getAllLunch = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Internal Server Error',
+      message: error.message,
       data: null,
     });
   }
 };
 
 const sendLunch = async (req, res) => {
-  const { receiverId, quantity, note } = req.body;
+  const { receiver_id, quantity, note } = req.body;
 
   try {
+    console.log(
+      'The user',
+      req.user.id,
+      'Rec:',
+      receiver_id,
+      'Qty:',
+      quantity,
+      'note:',
+      note,
+      'Org:',
+      req.user.org_id,
+    );
     //Create a new lunch
     const lunch = await Lunch.create({
       sender_id: req.user.id,
-      receiver_id: receiverId,
+      receiver_id,
+      org_id: req.user.org_id,
       quantity,
       note,
     });
 
-    const sender = await User.findOne({ where: { id: req.id } });
-    const receiver = await User.findOne({ where: { id: receiverId } });
+    const org = await Organization.findOne({ where: { id: req.user.org_id } });
+    const totalLunchPrice = org.lunch_price * (quantity || 1);
 
-    //Update the sender's balance
+    // Find the sender and receiver
+    const [sender, receiver] = await Promise.all([
+      User.findOne({ where: { id: req.user.id } }),
+      User.findOne({ where: { id: receiver_id } }),
+    ]);
+
+    // Check if the sender has enough balance
+    if (sender.lunch_credit_balance < totalLunchPrice) {
+      throw createCustomError('Insufficient balance.', 401);
+    }
+    // Debit the sender's balance
     await sender.update({
-      balance: sender.balance - quantity,
+      lunch_credit_balance: sender.lunch_credit_balance - totalLunchPrice,
     });
 
-    //Update the receiver's balance
+    console.log('Total lunch costs ', totalLunchPrice);
+    console.log(
+      'Sender',
+      sender.lunch_credit_balance,
+      'Receiver',
+      receiver.lunch_credit_balance,
+    );
+    // Credit the receiver's balance
     await receiver.update({
-      balance: receiver.balance + quantity,
+      lunch_credit_balance: receiver.lunch_credit_balance + totalLunchPrice,
     });
+
+    console.log(
+      'Sender',
+      sender.lunch_credit_balance,
+      'Receiver',
+      receiver.lunch_credit_balance,
+    );
 
     res.status(201).json({
       success: true,
@@ -73,7 +111,7 @@ const sendLunch = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Internal Server Error',
+      message: error.message,
       data: null,
     });
   }
@@ -105,7 +143,7 @@ async function redeemGiftController(req, res) {
 
     const sender = await User.findOne({ where: { email } });
     const senderLunchEntry = await Lunch.findOne({
-      where: { senderId: sender.id },
+      where: { sender_id: sender.id },
     });
     await senderLunchEntry.update({ redeemed: true });
     await senderLunchEntry.save();
@@ -124,7 +162,7 @@ async function redeemGiftController(req, res) {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: 'Internal Server Error',
+      message: error.message,
       data: null,
     });
   }

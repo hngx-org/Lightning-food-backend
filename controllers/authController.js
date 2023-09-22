@@ -13,12 +13,12 @@ async function createUser(req, res, next) {
     const {
       first_name,
       last_name,
+      email,
       phone,
+      org_id,
       password,
-      is_admin,
-      profile_pic,
       lunch_credit_balance,
-      refresh_token,
+      is_admin,
       bank_code,
       bank_name,
       bank_number,
@@ -35,16 +35,15 @@ async function createUser(req, res, next) {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const user = {
-      first_name,
-      last_name,
-      email: req.email,
+      first_name: first_name || 'John',
+      last_name: last_name || 'Doe',
+      email: req.email || email,
       phone,
       password_hash: hashedPassword,
-      is_admin,
-      profile_pic,
-      org_id: req.org_id,
-      lunch_credit_balance,
-      refresh_token,
+      is_admin: is_admin || false,
+      profile_pic: 'https://cdn-icons-png.flaticon.com/512/147/147142.png',
+      org_id: req.org_id || org_id,
+      lunch_credit_balance: lunch_credit_balance || 1000,
       bank_code,
       bank_name,
       bank_number,
@@ -101,9 +100,7 @@ const loginUser = async (req, res, next) => {
       statusCode: 200,
       data: {
         access_token: token,
-        email: user.email,
-        id: user.id,
-        isAdmin: user.is_admin,
+        user: user,
       },
     });
   } catch (error) {
@@ -153,7 +150,11 @@ async function createOrgAndUser(req, res, next) {
     //   throw createCustomError('Missing required fields', 400);
     // }
 
-    
+    if (!email || !password || !org_name || !lunch_price) {
+      // TODO: truly validate data
+      throw createCustomError('Missing required fields', 400);
+    }
+
     // Create the organization
     const organization = await Organization.create({
       name: org_name,
@@ -185,7 +186,7 @@ async function createOrgAndUser(req, res, next) {
       password_hash: hashedPassword,
       is_admin: true,
       org_id: organization.id,
-      lunch_credit_balance: 100000,
+      lunch_credit_balance: 10000,
     };
 
     const newUser = await User.create(user);
