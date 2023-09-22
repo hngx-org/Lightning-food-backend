@@ -5,8 +5,6 @@ const User = require('../models/user.model');
 const { createCustomError } = require('../errors/custom-errors');
 const Organization = require('../models/organization.model');
 const OrgLunchWallet = require('../models/org_lunch_wallet.model');
-const Invite = require('../models/organisation_invite.model');
-// const { sendUserOtp } = require('./mailController');
 
 const secretKey = process.env.JWT_SECRET_KEY;
 
@@ -15,32 +13,22 @@ async function createUser(req, res, next) {
     const {
       first_name,
       last_name,
-      email,
       phone,
       password,
       is_admin,
       profile_pic,
-      org_id,
       lunch_credit_balance,
       refresh_token,
       bank_code,
       bank_name,
       bank_number,
-      token,
     } = req.body;
 
     // Validate input data
 
-    if (!first_name || !last_name || !email || !password) {
-      // TODO: truly validate data
-      throw createCustomError('Missing required fields', 400);
-    }
-
-    // Check if the token is valid and retrieve org_id
-    // const invite = await Invite.findOne({ where: { token } });
-
-    // if (!invite || new Date() > invite.ttl) {
-    //   throw createCustomError('Invalid or expired invitation token', 400);
+    // if (!first_name || !last_name || !email || !password) {
+    //   // TODO: truly validate data
+    //   throw createCustomError('Missing required fields', 400);
     // }
 
     const salt = await bcrypt.genSalt(10);
@@ -49,12 +37,12 @@ async function createUser(req, res, next) {
     const user = {
       first_name,
       last_name,
-      email,
+      email: req.email,
       phone,
       password_hash: hashedPassword,
       is_admin,
       profile_pic,
-      org_id,
+      org_id: req.org_id,
       lunch_credit_balance,
       refresh_token,
       bank_code,
@@ -63,17 +51,12 @@ async function createUser(req, res, next) {
     };
 
     const newUser = await User.create(user);
-    delete newUser.password_hash;
-
-    const userWithoutPassword = Object.assign(newUser.toJSON);
-    delete userWithoutPassword.password_hash;
-    console.log(userWithoutPassword);
 
     return res.status(200).json({
       success: true,
       message: 'User registered successfully',
       data: {
-        user: userWithoutPassword,
+        user: newUser,
       },
     });
   } catch (error) {
