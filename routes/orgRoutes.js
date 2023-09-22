@@ -9,11 +9,15 @@ const {
   updateOrgDetails,
 } = require('../controllers/organizationController');
 
+const {
+  createOrgAndUser
+} = require('../controllers/authController');
+
 // admin user middleware to block non admin from accessing the follow routes
 
 
 router.post('/confirm-invite', confirmInviteCode);
-router.post('/create', createOrganization);
+router.post('/create', createOrgAndUser);
 
 router.use(auth);
 router.use(adminUser);
