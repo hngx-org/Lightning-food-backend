@@ -6,6 +6,8 @@ const {
   getUserById,
   getAllUsers,
   updateUser,
+  forgotPassword,
+  resetPassword,
   deleteUser,
 } = require('../controllers/userController');
 const { auth } = require('../middlewares/auth');
