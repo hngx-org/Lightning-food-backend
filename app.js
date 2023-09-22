@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(helmet());
 const PORT = process.env.PORT || 4000;
 
-app.use('/api/', userRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/organization', orgRoutes);
 app.use('/api/lunch', lunchRoutes);

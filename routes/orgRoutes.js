@@ -11,8 +11,8 @@ const {
 router.post('/create', createOrganization);
 
 // admin user middleware to block non admin from accessing the follow routes
-router.use(auth);
-router.use(adminUser);
+// router.use(auth);
+// router.use(adminUser);
 router.post('send-invite', sendInvite);
 router.put('/update-info', updateOrgDetails);
 

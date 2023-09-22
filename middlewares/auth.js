@@ -1,12 +1,14 @@
+const dotenv = require('dotenv');
+
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
 const { createCustomError } = require('../errors/custom-errors');
 
+dotenv.config();
 async function auth(req, res, next) {
   try {
-    const token = req.header('Authorization').replace('Bearer', '');
-
-    const decoded = jwt.decode(token, process.env.JWT_SIGNATURE);
+    const token = req.header('Authorization').replace('Bearer', '').trim();
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
     const user = await User.findByPk(decoded.id);
 
