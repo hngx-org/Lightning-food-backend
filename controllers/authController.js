@@ -35,15 +35,15 @@ async function createUser(req, res, next) {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const user = {
-      first_name,
-      last_name,
+      first_name: 'John',
+      last_name: 'Doe',
       email: req.email,
       phone,
       password_hash: hashedPassword,
       is_admin,
-      profile_pic,
+      profile_pic: 'https://cdn-icons-png.flaticon.com/512/147/147142.png',
       org_id: req.org_id,
-      lunch_credit_balance,
+      lunch_credit_balance: 10,
       refresh_token,
       bank_code,
       bank_name,
@@ -101,9 +101,7 @@ const loginUser = async (req, res, next) => {
       statusCode: 200,
       data: {
         access_token: token,
-        email: user.email,
-        id: user.id,
-        is_admin: user.is_admin,
+        user: user,
       },
     });
   } catch (error) {
