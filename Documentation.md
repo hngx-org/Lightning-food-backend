@@ -148,7 +148,7 @@ The sendLunch function is responsible for sending a lunch from the current user 
 
 #### Endpoint: /api/lunch
 
-#### Request Format: Include the reciever id, quantity and the note in the request body.
+#### Request Format: Include the receiver id, quantity and the note in the request body.
 
 #### HTTP Status Code: 200 OK
 
@@ -160,14 +160,14 @@ The sendLunch function is responsible for sending a lunch from the current user 
 ```json
 {
   "success": true,
-  "message": "Lunche sent successfully",
+  "message": "Lunch sent successfully",
   "data": "lunch"
 }
 ```
 
 ## Functionality
 
-1. Extracts the receiverId, quantity, and note from the request body.
+1. Extracts the receiver_id, quantity, and note from the request body.
 2. Creates a new lunch entry in the Lunch model with the sender's ID (obtained from the JWT token) and the provided receiver ID, quantity, and note.
 3. Retrieves the sender and receiver user records from the User model.
 4. Updates the sender's balance by subtracting the lunch quantity.

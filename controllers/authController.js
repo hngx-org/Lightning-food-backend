@@ -13,12 +13,12 @@ async function createUser(req, res, next) {
     const {
       first_name,
       last_name,
+      email,
       phone,
+      org_id,
       password,
-      is_admin,
-      profile_pic,
       lunch_credit_balance,
-      refresh_token,
+      is_admin,
       bank_code,
       bank_name,
       bank_number,
@@ -35,16 +35,15 @@ async function createUser(req, res, next) {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const user = {
-      first_name: 'John',
-      last_name: 'Doe',
-      email: req.email,
+      first_name: first_name || 'John',
+      last_name: last_name || 'Doe',
+      email: req.email || email,
       phone,
       password_hash: hashedPassword,
-      is_admin,
+      is_admin: is_admin || false,
       profile_pic: 'https://cdn-icons-png.flaticon.com/512/147/147142.png',
-      org_id: req.org_id,
-      lunch_credit_balance: 10,
-      refresh_token,
+      org_id: req.org_id || org_id,
+      lunch_credit_balance: lunch_credit_balance || 1000,
       bank_code,
       bank_name,
       bank_number,
@@ -155,7 +154,7 @@ async function createOrgAndUser(req, res, next) {
       // TODO: truly validate data
       throw createCustomError('Missing required fields', 400);
     }
-    
+
     // Create the organization
     const organization = await Organization.create({
       name: org_name,

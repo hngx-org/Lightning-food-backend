@@ -29,11 +29,9 @@ const Lunch = sequelize.define(
     },
     quantity: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     redeemed: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
     },
     note: {
       type: DataTypes.TEXT,
@@ -44,7 +42,7 @@ const Lunch = sequelize.define(
 // foreign key to user from receiver to allow usage like
 // lunch.user
 Lunch.belongsTo(User, {
-  foreignKey: 'reciever_id',
+  foreignKey: 'receiver_id',
 });
 
 // foreign key to user from sender to allow usage like
