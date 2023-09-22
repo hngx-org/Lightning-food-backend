@@ -1,5 +1,5 @@
 # Free Lunch App
-A NodeJS-MYSQL based application design by Team-Lightning in the HNG-X Internship, September 2023.
+A NodeJS-MYSQL based application design by Team-Lightning in the HNG-X Internship, September 2023
 
 ### Overview
 Click and navigate to any section of your choice.
