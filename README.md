@@ -1,14 +1,21 @@
-# Free Lunch App
+﻿# Free Lunch App
 A NodeJS-MYSQL based application design by Team-Lightning in the HNG-X Internship, September 2023
 
 ### Overview
 Click and navigate to any section of your choice.
 
-- [Getting Started💡](#getting-started)
-- [API Documentation Summary💡](#api-documentation-summary)
-- [Environmental Variables](#environmental-variables)
-- [Major Packages and Dependencies](#major-packages-and-dependencies)
-- [Contributors](#contributors)
+- [Free Lunch App](#free-lunch-app)
+    - [Overview](#overview)
+  - [Getting Started](#getting-started)
+  - [API Documentation Summary](#api-documentation-summary)
+    - [Endpoint Consumption Summary Table](#endpoint-consumption-summary-table)
+    - [Request Methods Response Formats and Status Codes Used](#request-methods-response-formats-and-status-codes-used)
+    - [Models, ERD and Database SetUp](#models-erd-and-database-setup)
+    - [Simple Setup Instructions](#simple-setup-instructions)
+    - [Sample API Usage](#sample-api-usage)
+  - [Environmental Variables](#environmental-variables)
+    - [Major Packages and Dependencies](#major-packages-and-dependencies)
+  - [Contributors](#contributors)
 
 ## Getting Started
 
@@ -138,13 +145,5 @@ For effectively testing the API, these credentials were setup in the `.env` file
 See more `dev-dependencies` in the [`package.json`](package.json) file.
 
 ## Contributors
-@ Team Lightning, September 2023
+@ Team Panther, September 2023
 [Move back up](#free-lunch-app)
-
-
-## Todos
-- Update User endpoints (reset -password)
-- Populate full list of contributors
-- Issues
-- Liscences
-- etc from mentors recommendations...
