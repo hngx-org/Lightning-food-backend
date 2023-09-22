@@ -35,7 +35,7 @@ const getAllLunch = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Internal Server Error',
+      message: error.message,
       data: null,
     });
   }
@@ -88,7 +88,7 @@ const sendLunch = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Internal Server Error',
+      message: error.message,
       data: null,
     });
   }
@@ -139,7 +139,7 @@ async function redeemGiftController(req, res) {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: 'Internal Server Error',
+      message: error.message,
       data: null,
     });
   }

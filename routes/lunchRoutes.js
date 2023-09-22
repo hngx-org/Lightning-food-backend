@@ -5,6 +5,7 @@ const {
   getAllLunch,
   getLunchDetail,
   sendLunch,
+  redeemGiftController,
 } = require('../controllers/lunchControllers');
 // const { giftLunch } = require('../controllers/giftLunchController');
 const { getLunchDetailsByUserId } = require('../controllers/lunchControllers');
@@ -22,6 +23,10 @@ router.get('/', getAllLunch);
 // Gift Launch
 // router.post('/send', giftLunch);
 router.post('/send', sendLunch);
+
+// Redeem Launch
+// router.post('/redeem', redeemGiftController);
+router.post('/redeem', redeemGiftController);
 
 // get lunch detail
 router.get('/:lunchId', getLunchDetail);
