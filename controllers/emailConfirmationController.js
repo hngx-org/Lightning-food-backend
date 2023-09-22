@@ -1,5 +1,6 @@
 // import bcrypt from "bcryptjs"
 const dotenv = require('dotenv');
+<<<<<<< HEAD
 const { transport } = require('../config/nodemailerConfig.js');
 
 dotenv.config();
@@ -8,6 +9,16 @@ const teamMail = process.env.TEAM_MAIL;
 const issueOtp = async (userId, email) => {
   const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
   const saltRounds = 12; //This should be in environment variable
+=======
+const { transport } = require('../config/nodemailerConfig');
+
+dotenv.config();
+// const teamMail = process.env.TEAM_MAIL;
+
+const issueOtp = async () => {
+  const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
+  // const saltRounds = 12; //This should be in environment variable
+>>>>>>> ab3f5c8fe9c0c9adac8b84cb3de300eeed4195aa
 
   //   const hashedOTP = await bcrypt.hash(otp, saltRounds);
 

@@ -115,7 +115,7 @@ async function redeemGiftController(req, res) {
       data: {
         id: newEntry.id,
         user_id: User.id,
-        status: Withdrawals.status,
+        status: 'success',
         amount,
         created_at: newEntry.created_at,
       },
