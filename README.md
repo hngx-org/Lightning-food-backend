@@ -14,7 +14,7 @@ Click and navigate to any section of your choice.
     - [Simple Setup Instructions](#simple-setup-instructions)
     - [Sample API Usage](#sample-api-usage)
   - [Environmental Variables](#environmental-variables)
-    - [Major Packages and Dependencies](#major-packages-and-dependencies)
+  - [Major Packages and Dependencies](#major-packages-and-dependencies)
   - [Contributors](#contributors)
 
 ## Getting Started
@@ -37,11 +37,18 @@ Multiple organizations can be hosted on this application. It is like a social-me
 The `REST API` architecture of this application is implemented using `Node-js` and `Express`.
 This API is equipped with functionalities to dynamically handle request/responses on various endpoints/resources of this application. To access some endpoint/resource, a user might be required to have a form of authentication and authorization which is implemented by consuming the vast functionalities of  `Jason Web Tokens` (JWT). The key `API` endpoint set-up is explained in the titles below:
 
-- [Endpoint Consumption Summary Table](#endpoint-consumption-summary-table)
--[ Request Methods Response Formats and Status Codes Used](#request-methods-response-formats-and-status-codes-used)
-- [Models, ERD and Database SetUp](#models,-erd-and-database-setup)
-- [Simple Setup Instructions](#simple-setup-instructions)
-- [Sample API Usage](#sample-api-usage)
+- [Free Lunch App](#free-lunch-app)
+    - [Overview](#overview)
+  - [Getting Started](#getting-started)
+  - [API Documentation Summary](#api-documentation-summary)
+    - [Endpoint Consumption Summary Table](#endpoint-consumption-summary-table)
+    - [Request Methods Response Formats and Status Codes Used](#request-methods-response-formats-and-status-codes-used)
+    - [Models, ERD and Database SetUp](#models-erd-and-database-setup)
+    - [Simple Setup Instructions](#simple-setup-instructions)
+    - [Sample API Usage](#sample-api-usage)
+  - [Environmental Variables](#environmental-variables)
+  - [Major Packages and Dependencies](#major-packages-and-dependencies)
+  - [Contributors](#contributors)
 
 ### Endpoint Consumption Summary Table
 
