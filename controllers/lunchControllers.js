@@ -3,11 +3,8 @@ const { Op } = require('sequelize');
 const Lunch = require('../models/lunches.model');
 const User = require('../models/user.model');
 const Withdrawals = require('../models/withdrawals.model');
-<<<<<<< HEAD
-=======
 const { createCustomError } = require('../errors/custom-errors');
 const Organization = require('../models/organization.model');
->>>>>>> 894762640d3b9aaded80ae114a4be6c831aeaa39
 
 //GET endpoint to retrieve all available lunches for a user
 const getAllLunch = async (req, res) => {
