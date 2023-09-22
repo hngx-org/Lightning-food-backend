@@ -103,7 +103,7 @@ const loginUser = async (req, res, next) => {
         access_token: token,
         email: user.email,
         id: user.id,
-        isAdmin: user.is_admin,
+        is_admin: user.is_admin,
       },
     });
   } catch (error) {
@@ -153,6 +153,10 @@ async function createOrgAndUser(req, res, next) {
     //   throw createCustomError('Missing required fields', 400);
     // }
 
+    if (!email || !password || !org_name) {
+      // TODO: truly validate data
+      throw createCustomError('Missing required fields', 400);
+    }
     
     // Create the organization
     const organization = await Organization.create({
