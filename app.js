@@ -21,7 +21,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/organization', orgRoutes);
 app.use('/api/lunch', lunchRoutes);
-app.use('/api/withdrawals', withDrawalRoute);
+app.use('/api/withdrawal', withDrawalRoute);
 
 // Middlewares
 app.use(errorHandlerMiddleware);

@@ -19,7 +19,7 @@ const Withdrawal = sequelize.define(
       onDelete: 'CASCADE',
     },
     status: {
-      type: DataTypes.ENUM('redeemed', 'not_redeemed'),
+      type: DataTypes.ENUM('success', 'pending'),
       allowNull: false,
     },
     amount: {
@@ -38,6 +38,6 @@ const Withdrawal = sequelize.define(
   },
 );
 
-Withdrawal.belongsTo(User);
+// Withdrawal.belongsTo(User);
 
 module.exports = Withdrawal;

@@ -20,6 +20,8 @@ async function withdrawCashController(req, res, next) {
     // eslint-disable-next-line camelcase
     userWithdrawing.update({ bank_number, bank_name, bank_code });
 
+    console.log(userWithdrawing.lunch_credit_balance);
+
     if (
       !userWithdrawing.lunch_credit_balance ||
       userWithdrawing.lunch_credit_balance === 0 ||
@@ -30,30 +32,24 @@ async function withdrawCashController(req, res, next) {
     await userWithdrawing.decrement('lunch_credit_balance', { by: amount });
     await userWithdrawing.save();
     const newEntry = await Withdrawals.create({
-      id,
       user_id: id,
-      status: 'redeemed',
+      status: 'success',
       amount,
     });
-    
 
     res.status(201).json({
       message: 'Withdrawal request created successfully',
       statusCode: 201,
-      data: {
-        id: newEntry.id,
-        user_id: User.id,
-        status: 'success',
-        amount,
-        created_at: newEntry.created_at,
-      },
+      data: newEntry,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 }
 
 async function withdrawalHistory(req, res, next) {
+  console.log(req.user);
   try {
     const { id } = req.user;
 

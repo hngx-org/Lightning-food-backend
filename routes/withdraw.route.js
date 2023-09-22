@@ -8,8 +8,8 @@ const { auth } = require('../middlewares/auth');
 const router = express.Router();
 
 router.use(auth);
-router.post('/withdraw', withdrawCashController);
-router.get('/', withdrawCashController);
-router.get('/history', withdrawalHistory);
+router.post('/request', withdrawCashController);
+// router.get('/', withdrawCashController);
+router.get('/all', withdrawalHistory);
 
 module.exports = router;

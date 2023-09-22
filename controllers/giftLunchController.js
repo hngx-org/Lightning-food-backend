@@ -53,7 +53,6 @@ const giftLunch = async (req, res) => {
       .status(201)
       .json(response(true, 'Lunch gifted successfully', { lunch: newLunch }));
   } catch (error) {
-    console.log(error);
     return res.status(500).json(response(false, 'Internal Server Error', null));
   }
 };
