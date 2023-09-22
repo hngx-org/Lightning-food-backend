@@ -129,7 +129,7 @@ For effectively testing the API, these credentials were setup in the `.env` file
 `JWT_SIGNATURE= *QSJfus1TOH2fSHw41Ifo0LMN2fzeQD*`
 ```
 
-### Major Packages and Dependencies
+## Major Packages and Dependencies
 - `dotenv`
 - `express`
 - `nodemon`
