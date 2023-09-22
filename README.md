@@ -19,8 +19,9 @@ Click and navigate to any section of your choice.
     - [Updating A User](#updating-a-user)
     - [Sending Lunch](#sending-lunch)
     - [Redeeming Lunch](#redeeming-lunch)
+    - [Updating User Password](#updating-user-password)
   - [Environmental Variables](#environmental-variables)
-    - [Major Packages and Dependencies](#major-packages-and-dependencies)
+  - [Major Packages and Dependencies](#major-packages-and-dependencies)
   - [Contributors](#contributors)
 
 ## Getting Started
@@ -58,8 +59,9 @@ This API is equipped with functionalities to dynamically handle request/response
     - [Updating A User](#updating-a-user)
     - [Sending Lunch](#sending-lunch)
     - [Redeeming Lunch](#redeeming-lunch)
+    - [Updating User Password](#updating-user-password)
   - [Environmental Variables](#environmental-variables)
-    - [Major Packages and Dependencies](#major-packages-and-dependencies)
+  - [Major Packages and Dependencies](#major-packages-and-dependencies)
   - [Contributors](#contributors)
 
 ### Endpoint Consumption Summary Table
@@ -77,22 +79,23 @@ This API is equipped with functionalities to dynamically handle request/response
 |7.| Get All Users | `/api/users/` | `GET` |Finds all users for an organization| _Admin_ |
 |8.| Forget Password | `/api/users/forget-password` | `POST` |Initiates reseting procedures| _Admin/User_ |
 |9.| Reset Password | `/api/users/reset-password` | `PATCH` |Resets User Password| _Admin/User_ |
-|10.| Update User | `/api/user/:id` | `PUT` |Updates a user by id| _Admin/User_ |
-|11.| Delete User| `/api/users/:id` | `DELETE` |Deletes a user| _Admin/User_ |
-|12.| Logout User | `/api/auth/logout` | `POST` |For loggin a user out| _Admin/User_ |
+|10.| Update/Change Password | `/api/users/update-password` | `PATCH` |Creates a new User Password| _Admin/User_ |
+|11.| Update User | `/api/user/:id` | `PUT` |Updates a user by id| _Admin/User_ |
+|12.| Delete User| `/api/users/:id` | `DELETE` |Deletes a user| _Admin/User_ |
+|13.| Logout User | `/api/auth/logout` | `POST` |For loggin a user out| _Admin/User_ |
 |   |                  |_**Organization Routes**_ (`/api/organization`)||
-|13.| Create Organization| `/api/organization/create`| `POST`| Creates new organization | _Admin_ |
-|14.| Confirm Invite | `/api/organization/confirm-invite` | `POST`| Confirms invite to an org. | _Admin_ |
-|15.| Send Invite | `/api/organization/send-invite` | `POST`| Sends user an invite to join org. | _Admin_ |
-|16.| Update Organization | `/api/organization/update-info` | `PUT`| Updates the organization details | _Admin_ |
+|14.| Create Organization| `/api/organization/create`| `POST`| Creates new organization | _Admin_ |
+|15.| Confirm Invite | `/api/organization/confirm-invite` | `POST`| Confirms invite to an org. | _Admin_ |
+|16.| Send Invite | `/api/organization/send-invite` | `POST`| Sends user an invite to join org. | _Admin_ |
+|17.| Update Organization | `/api/organization/update-info` | `PUT`| Updates the organization details | _Admin_ |
 |   |                  |_**Lunch Routes**_ (`/api/lunch`)||
-|17.| Get All Lunch | `/api/lunch/` | `GET`| Fetches all available lunch | _Admin/User_ |
-|18.| Gift Lunch | `/api/lunch/send` | `POST`| Send lunch to a user | _Admin/User_ |
-|19.| Get Lunch Detail | `/api/lunch/:lunchId` | `GET`| Fetches details for a lunch by id | _Admin/User_ |
-|20.| Get Lunch by UserID | `/api/lunch/user/:userId` | `GET`| Fetches lunch for a user by id | _Admin/User_ |
+|18.| Get All Lunch | `/api/lunch/` | `GET`| Fetches all available lunch | _Admin/User_ |
+|19.| Gift Lunch | `/api/lunch/send` | `POST`| Send lunch to a user | _Admin/User_ |
+|20.| Get Lunch Detail | `/api/lunch/:lunchId` | `GET`| Fetches details for a lunch by id | _Admin/User_ |
+|21.| Get Lunch by UserID | `/api/lunch/user/:userId` | `GET`| Fetches lunch for a user by id | _Admin/User_ |
 |   |                  |_**Withdrawal[Redeem] Routes**_ (`/api/withdrawals`)||
-|21.| Redeem Lunch | `/api/withdrawals/withdraw` | `POST`| withdraws the monetary value for a lunch | _Admin/User_ |
-|22.| Withdrawal History | `/api/withdrawals/history` | `GET`| withdraws the monetary value for a lunch | _Admin/User_ |
+|22.| Redeem Lunch | `/api/withdrawals/withdraw` | `POST`| withdraws the monetary value for a lunch | _Admin/User_ |
+|23.| Withdrawal History | `/api/withdrawals/history` | `GET`| withdraws the monetary value for a lunch | _Admin/User_ |
 
 ### Request Methods Response Formats and Status Codes Used
 
@@ -113,7 +116,7 @@ This API is equipped with functionalities to dynamically handle request/response
 |6. | `404` | `NOT FOUND` |
 |7. | `500` | `INTERNAL SERVER ERROR` |
 
-Responses are all sent frontend in `JSON` format for each request. 
+Responses are all sent frontend in `JSON` format for each request.
 
 ### Models, ERD and Database SetUp
 The database this `API` interfaces with is `MYSQL`. Visit this [link](https://drawsql.app/teams/benrobo/diagrams/free-lunch) to access our models and ERD format
@@ -137,7 +140,7 @@ The application starts running and listening on the port defined in `process.env
 The Requests and Responses in the [next section](#request-and-response-formats-for-endpoint-testing) demonstrates the testing and use of some core functionalities in the `Free Lunch App API`.
 
 ## Request and Response Formats for Endpoint Testing
-We will demonstrate the performance of requests and `reception` of `responses` on some select `endpoints`: `Register a User`, `Login`, `Update a User`, `Send Lunch` and `Redeem Lunch`, as these describes the core functionality of the `Free Lunch Application`.
+We will demonstrate the performance of `requests` and reception of `responses` on some select `endpoints`: `Register a User`, `Login`, `Update a User`, `Send Lunch`, `Redeem Lunch` and `Updating User Password` as these describes the core functionality of the `Free Lunch Application`.
 
 Navigate to any section of your choice or kindly stick to the flow!
 
@@ -146,6 +149,7 @@ Navigate to any section of your choice or kindly stick to the flow!
 - [Updating A User](#updating-a-user)
 - [Sending Lunch](#sending-lunch)
 - [Redeeming Lunch](#redeeming-lunch)
+- [Updating User Password](#updating-user-password)
 
 ### Registering a New User Account
 - **Endpoint**: `/api/auth/signup`
@@ -193,7 +197,7 @@ Navigate to any section of your choice or kindly stick to the flow!
 ```
 
 - **Response Body `JSON`**:
-- - **Status Code**: `200`
+- **Status Code**: `200`
 ```
 {
     "success": true,
@@ -221,7 +225,7 @@ Navigate to any section of your choice or kindly stick to the flow!
 ```
 
 - **Response Body `JSON`**:
-- - **Status Code**: `200`
+- **Status Code**: `200`
 ```
 {
     "success" : true,
@@ -281,12 +285,33 @@ Navigate to any section of your choice or kindly stick to the flow!
     "message" : "Withdrawal request created successfully",
     "statusCode" : 201,
       "data" : {
-        "id" : "ID-OF-DB-FIELD", 
+        "id" : "ID-OF-DB-FIELD",
         "user_id": "USER-ID",
         "status" : "success",
         "amount" : 2,
         "created_at" : "TIME OF COMPLETION OF WITHDRAWAL",
       }
+}
+```
+
+### Updating User Password
+- **Endpoint**: `/api/users/update-password`
+- **Method**: `PATCH`
+- **Description**: The steps for changing or updating a user's password.
+- **Request Body**:
+```
+{
+    "confirmPassword" : "PASS-MUST-MATCH",
+    "password" : "PASS-MUST-MATCH",
+}
+```
+
+- **Response Body `JSON`**:
+- **Status Code**: `200`
+```
+{
+    "message" : "Password created successfully",
+    "statusCode" : 200,
 }
 ```
 
@@ -304,7 +329,7 @@ For effectively testing the API, these credentials were setup in the `.env` file
 `JWT_SIGNATURE= *QSJfus1TOH2fSHw41Ifo0LMN2fzeQD*`
 ```
 
-### Major Packages and Dependencies
+## Major Packages and Dependencies
 - `dotenv`
 - `express`
 - `nodemon`
