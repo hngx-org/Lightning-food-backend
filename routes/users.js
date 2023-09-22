@@ -1,9 +1,28 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+const router = express.Router();
+const {
+  getMe,
+  getUserById,
+  getAllUsers,
+  updateUser,
+  forgotPassword,
+  resetPassword,
+  deleteUser,
+} = require('../controllers/userController');
+const { auth } = require('../middlewares/auth');
+
+// forgot password
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password', resetPassword);
+router.use(auth);
+
+router.get('/me', getMe);
+router.get('/:id', getUserById);
+router.get('/', getAllUsers);
+router.put('/:id', updateUser);
+router.delete('/:id', deleteUser);
 
 module.exports = router;
+
+//I think the user routes should be named userRoutes.js instead of users.js

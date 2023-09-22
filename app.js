@@ -1,34 +1,36 @@
-var createError = require('http-errors');
-var express = require('express');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+require('dotenv').config();
+const express = require('express');
+const helmet = require('helmet');
+const notFound = require('./middlewares/not-found');
+const errorHandlerMiddleware = require('./middlewares/error-handler');
+const userRoutes = require('./routes/users');
+const orgRoutes = require('./routes/orgRoutes');
+const lunchRoutes = require('./routes/lunchRoutes');
+const authRoutes = require('./routes/auth.route');
+const withDrawalRoute = require('./routes/withdraw.route');
+const sequelize = require('./db/db');
 
-// middleware
-app.use(express.json())
+const app = express();
 
-
-app.use(logger('dev'));
+// Configurations
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(helmet());
+const PORT = process.env.PORT || 4000;
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/api/users', userRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/organization', orgRoutes);
+app.use('/api/lunch', lunchRoutes);
+app.use('/api/withdrawals', withDrawalRoute);
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-    next(createError(404));
+// Middlewares
+app.use(errorHandlerMiddleware);
+app.use(notFound);
+
+sequelize.sync().then(() => {
+  // Remove console.log() before production
+  console.log('Database & tables created!');
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
 });
-
-// error handler
-app.use(function (err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-    // render the error page
-    res.status(err.status || 500);
-    res.render('error');
-});
-
-module.exports = app;
