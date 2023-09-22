@@ -141,9 +141,9 @@ const confirmInviteCode = async (req, res, next) => {
 const updateOrgDetails = async (req, res, next) => {
   try {
     const { name, lunchPrize, currency } = req.body;
-    const { isAdmin, org_id } = req.user;
+    const { is_admin, org_id } = req.user;
 
-    if (!isAdmin) {
+    if (!is_admin) {
       throw createCustomError('This user is not an admin', 403);
     }
 

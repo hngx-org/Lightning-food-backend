@@ -10,7 +10,7 @@ const { auth } = require('../middlewares/auth');
 router.use(auth);
 
 // Define a route to get lunch details by user ID
-router.get('/lunch/:userId', getLunchDetailsByUserId);
+router.get('/:userId', getLunchDetailsByUserId);
 
 //GET all available lunches for a user
 router.get('/', lunchControllers.getAllLunch);
@@ -20,8 +20,5 @@ router.post('/send', giftLunch);
 
 // get lunch detail
 router.get('/:lunchId', lunchControllers.getLunchDetail);
-
-// Define a route to get lunch details by user ID
-router.get('/user/:userId', getLunchDetailsByUserId);
 
 module.exports = router;

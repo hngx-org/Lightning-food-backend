@@ -10,17 +10,21 @@ const {
   resetPassword,
   deleteUser,
 } = require('../controllers/userController');
-const { auth } = require('../middlewares/auth');
+const { auth, adminUser } = require('../middlewares/auth');
 
 // forgot password
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password', resetPassword);
+
 router.use(auth);
 
 router.get('/me', getMe);
 router.get('/:id', getUserById);
 router.get('/', getAllUsers);
 router.put('/:id', updateUser);
+
+router.use(adminUser);
+
 router.delete('/:id', deleteUser);
 
 module.exports = router;

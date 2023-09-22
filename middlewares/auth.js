@@ -1,7 +1,9 @@
+/* eslint-disable camelcase */
 const dotenv = require('dotenv');
 
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/user.model');
+const { createCustomError } = require('../errors/custom-errors');
 
 dotenv.config();
 async function auth(req, res, next) {
@@ -13,7 +15,6 @@ async function auth(req, res, next) {
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
-
     const user = await User.findByPk(decoded.id);
 
     if (!user) {
@@ -24,7 +25,6 @@ async function auth(req, res, next) {
     req.token = token;
 
     next(); // Call next() to continue with the next middleware
-
   } catch (error) {
     console.error(error.message);
     next(error); // Pass the error to the error handling middleware (if available)
@@ -61,9 +61,9 @@ async function auth(req, res, next) {
  * @param {*} next
  */
 function adminUser(req, res, next) {
-  const { isAdmin } = req.user;
+  const { is_admin } = req.user;
   try {
-    if (!isAdmin) {
+    if (!is_admin) {
       throw createCustomError('Not admin user', 403);
     }
     next();

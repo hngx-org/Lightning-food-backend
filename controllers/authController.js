@@ -103,7 +103,7 @@ const loginUser = async (req, res, next) => {
         access_token: token,
         email: user.email,
         id: user.id,
-        isAdmin: user.is_admin,
+        is_admin: user.is_admin,
       },
     });
   } catch (error) {
