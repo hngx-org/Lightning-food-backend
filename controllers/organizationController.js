@@ -3,11 +3,7 @@ const Organization = require('../models/organization.model');
 const LunchWallet = require('../models/org_lunch_wallet.model');
 const { createCustomError } = require('../errors/custom-errors');
 const orgInvites = require('../models/organisation_invite.model');
-
-const { generateUniqueToken, sendInvitationEmail } = {
-  generateUniqueToken: '',
-  sendInvitationEmail: '',
-};
+const transporter = require('../middlewares/emailConfig');
 
 // Create a new organization and user (Admin user only)
 const createOrganization = async (req, res, next) => {
@@ -41,32 +37,82 @@ const createOrganization = async (req, res, next) => {
   }
 };
 
-async function sendInvite(req, res, next) {
+const sendInviteCode = async (req, res) => {
+  const { email, organizationId } = req.body;
+
+  // Generate a random verification code
+  const verificationCode = Math.floor(
+    100000 + Math.random() * 900000,
+  ).toString();
+
+  // Save the invitation details in the database
+  console.log(email);
+  await orgInvites.create({
+    email: email,
+    token: verificationCode,
+    id: organizationId,
+  });
+
+  // Send an email with the verification code
+  const mailOptions = {
+    from: 'fredrickraymond2004@gmail.com', // Your email address
+    to: email, // User's email address
+    subject: 'Email Verification',
+    text: `Your verification code is: ${verificationCode}`,
+  };
+
+  // Send the email
+  await transporter.sendMail(mailOptions);
+
+  res.status(200).json({
+    success: true,
+    message: 'Invitation sent successfully',
+    data: null,
+  });
+};
+
+const confirmInviteCode = async (req, res, next) => {
   try {
-    const { email, organizationId } = req.body;
+    const { email, verificationCode } = req.body;
 
-    // Generate a unique token for the invitation (you can use a library like `uuid` for this)
-    const invitationToken = generateUniqueToken();
+    // Validate email and verification code
+    if (!email || !verificationCode) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email and verification code are required.',
+        data: null,
+      });
+    }
 
-    // Save the invitation details in the database
-    await orgInvites.create({
-      email,
-      token: invitationToken,
-      organization_id: organizationId,
+    // Verifing the verification code against the stored code in your database
+    const user = await orgInvites.findOne({
+      where: { email, token: verificationCode },
     });
 
-    // Send an email to the user with the invitation link (including the token)
-    await sendInvitationEmail(email, invitationToken);
+    if (!user || user.token !== verificationCode) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid email or verification code.',
+        data: null,
+      });
+    }
+
+    // Mark the email as verified
+    user.email = true;
+    user.token = null; // Optional, clear the verification code from the database or not
+    //  There is supposed to be a field where we set the state to be true once token is validated
+
+    await user.save();
 
     res.status(200).json({
       success: true,
-      message: 'Invitation sent successfully',
+      message: 'Token verified',
       data: null,
     });
   } catch (error) {
     next(error);
   }
-}
+};
 
 /**
  * Updates the organizational detail
@@ -98,4 +144,9 @@ const updateOrgDetails = async (req, res, next) => {
   }
 };
 
-module.exports = { sendInvite, createOrganization, updateOrgDetails };
+module.exports = {
+  sendInviteCode,
+  confirmInviteCode,
+  createOrganization,
+  updateOrgDetails,
+};
