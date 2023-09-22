@@ -5,6 +5,7 @@ const {
   getAllLunch,
   getLunchDetail,
   sendLunch,
+  redeemGiftController,
 } = require('../controllers/lunchControllers');
 // const { giftLunch } = require('../controllers/giftLunchController');
 const { getLunchDetailsByUserId } = require('../controllers/lunchControllers');
