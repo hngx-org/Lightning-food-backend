@@ -13,7 +13,7 @@ const getAllLunch = async (req, res) => {
     //Query the lunch model to find available lunches for the user
     const allLunches = await Lunch.findAll({
       where: {
-        [Op.or]: [{ senderId: userId }, { receiverId: userId }], //User is either the sender or receiver
+        [Op.or]: [{ sender_id: userId }, { receiver_id: userId }], //User is either the sender or receiver
       },
     });
 

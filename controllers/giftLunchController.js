@@ -21,8 +21,8 @@ const giftLunch = async (req, res) => {
       return res.status(404).json(response(false, 'User does not exist', null));
 
     const lunch = {
-      senderId: userId,
-      receiverId,
+      sender_id: userId,
+      receiver_id: receiverId,
       quantity,
       note,
       redeemed: true,

@@ -141,15 +141,7 @@ async function createOrgAndUser(req, res, next) {
 
     // Validate input data
 
-    if (
-      !first_name ||
-      !last_name ||
-      !email ||
-      !password ||
-      !org_name ||
-      !lunch_price ||
-      !currency_code
-    ) {
+    if (!email || !password || !org_name || !lunch_price) {
       // TODO: truly validate data
       throw createCustomError('Missing required fields', 400);
     }
