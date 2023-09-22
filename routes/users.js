@@ -15,7 +15,7 @@ router.use(auth);
 
 router.get('/users/me', getMe);
 router.get('/users/:id', getUserById);
-router.patch('users/update-password', createPasswordController);
+router.patch('/update-password', createPasswordController);
 router.get('/users/', getAllUsers);
 router.put('/users/:id', updateUser);
 router.delete('/users/:id', deleteUser);
