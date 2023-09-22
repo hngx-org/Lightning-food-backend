@@ -5,8 +5,28 @@ const User = require('../models/user.model');
 const { createCustomError } = require('../errors/custom-errors');
 const Organization = require('../models/organization.model');
 const OrgLunchWallet = require('../models/org_lunch_wallet.model');
-
+const {sendEmail} = require('./mailController') 
 const secretKey = process.env.JWT_SECRET_KEY;
+
+async function validateEmail(req, res, next) {
+  try {
+    const email = req.body.email;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    if (!emailRegex.test(email)) {
+      throw createCustomError('Invalid email format', 400);
+    }
+
+    await sendEmail(email);
+    
+    next();
+  } catch (error) {
+    console.error(`Error sending email: ${error.message}`);
+    next(createCustomError('Invalid email', 400));
+  }
+}
+
+
 
 async function createUser(req, res, next) {
   try {
@@ -217,4 +237,4 @@ async function createOrgAndUser(req, res, next) {
   }
 }
 
-module.exports = { createUser, loginUser, logoutUser, createOrgAndUser };
+module.exports = { validateEmail, createUser, loginUser, logoutUser, createOrgAndUser };
