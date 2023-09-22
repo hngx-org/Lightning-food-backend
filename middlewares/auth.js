@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 const dotenv = require('dotenv');
-
+const { createCustomError } = require('../errors/custom-errors');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/user.model');
 const { createCustomError } = require('../errors/custom-errors');
