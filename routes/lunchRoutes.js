@@ -8,7 +8,6 @@ const { getLunchDetailsByUserId } = require('../controllers/lunchControllers');
 // Define a route to get lunch details by user ID
 router.get('/lunch/:userId', getLunchDetailsByUserId);
 
-
 //GET all available lunches for a user
 router.get('/user/:userId/lunch/all', lunchControllers.getAllLunch);
 

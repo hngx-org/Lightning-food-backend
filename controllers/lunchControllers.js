@@ -131,13 +131,15 @@ async function redeemGiftController(req, res) {
 
 async function getLunchDetailsByUserId(req, res, next) {
   try {
-    const userId = req.params.userId;
+    const { userId } = req.params;
     // Use Sequelize to find the user's lunch details based on the provided user ID
     const lunchDetails = await Lunch.findOne({ where: { userId } });
 
     if (!lunchDetails) {
       // If no lunch details found for the user, return a 404 response
-      return res.status(404).json({ error: 'Lunch details not found for this user.' });
+      return res
+        .status(404)
+        .json({ error: 'Lunch details not found for this user.' });
     }
 
     // Return the lunch details as JSON
@@ -147,4 +149,9 @@ async function getLunchDetailsByUserId(req, res, next) {
   }
 }
 
-module.exports = { getAllLunch, sendLunch, redeemGiftController, getLunchDetailsByUserId };
+module.exports = {
+  getAllLunch,
+  sendLunch,
+  redeemGiftController,
+  getLunchDetailsByUserId,
+};
