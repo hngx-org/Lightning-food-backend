@@ -7,6 +7,7 @@ const userRoutes = require('./routes/users');
 const orgRoutes = require('./routes/orgRoutes');
 const lunchRoutes = require('./routes/lunchRoutes');
 const authRoutes = require('./routes/auth.route');
+const withDrawalRoute = require('./routes/withdraw.route');
 const sequelize = require('./db/db');
 
 const app = express();
@@ -20,7 +21,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/organization', orgRoutes);
 app.use('/api/lunch', lunchRoutes);
-app.use('/api', lunchRoutes);
+app.use('/api/withdrawls', withDrawalRoute);
 
 // Middlewares
 app.use(errorHandlerMiddleware);

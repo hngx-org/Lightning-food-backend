@@ -132,7 +132,7 @@ async function redeemGiftController(req, res) {
 
 async function getLunchDetailsByUserId(req, res, next) {
   try {
-    const userId = req.params.userId;
+    const { userId } = req.params;
     // Use Sequelize to find the user's lunch details based on the provided user ID
     const lunchDetails = await Lunch.findOne({ where: { userId } });
 

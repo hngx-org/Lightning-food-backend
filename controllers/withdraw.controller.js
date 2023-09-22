@@ -1,0 +1,76 @@
+const Lunch = require('../models/lunches.model');
+const User = require('../models/user.model');
+const Withdrawals = require('../models/withdrawals.model');
+const { createCustomError } = require('../errors/custom-errors');
+
+async function withdrawCashController(req, res, next) {
+  try {
+    const { id } = req.user;
+
+    // eslint-disable-next-line camelcase
+    const { bank_number, bank_name, bank_code, amount, email } = req.body;
+
+    // eslint-disable-next-line camelcase
+    if (!bank_number || !bank_name || !bank_code || !amount || !email) {
+      throw createCustomError('Please provide required field', 401);
+    }
+
+    const userWithdrawing = await User.findByPk(id); // for-refactoring find by email
+    // validate user with bank if null save bank details to user table
+
+    if (
+      !userWithdrawing.lunch_credit_balance ||
+      userWithdrawing.lunch_credit_balance === 0 ||
+      userWithdrawing.lunch_credit_balance < amount
+    ) {
+      throw createCustomError('Insufficient balance', 401);
+    }
+    await userWithdrawing.decrement('lunch_credit_balance :', { by: amount });
+    await userWithdrawing.save();
+    const newEntry = await Withdrawals.create({
+      id,
+      user_id: userWithdrawing.id,
+      amount,
+      status: 'success',
+    });
+
+    // const sender = await User.findOne({ where: { email } });
+    // const senderLunchEntry = await Lunch.findOne({
+    //   where: { senderId: sender.id },
+    // });
+    // await senderLunchEntry.update({ redeemed: true });
+    // await senderLunchEntry.save();
+
+    res.status(201).json({
+      message: 'Withdrawal request created successfully',
+      statusCode: 201,
+      data: {
+        id: newEntry.id,
+        user_id: User.id,
+        status: 'success',
+        amount,
+        created_at: newEntry.created_at,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function withdrawalHistory(req, res, next) {
+  try {
+    const { id } = req.user;
+
+    const withDrawals = await Withdrawals.findAll({ where: { user_id: id } });
+
+    res.status(201).json({
+      message: 'Withdrawal request created successfully',
+      statusCode: 201,
+      data: withDrawals,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = { withdrawCashController, withdrawalHistory };

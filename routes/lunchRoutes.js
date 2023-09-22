@@ -13,7 +13,7 @@ router.use(auth);
 router.get('/', lunchControllers.getAllLunch);
 
 // Gift Launch
-router.post('/gift-lunch', giftLunch);
+router.post('/send', giftLunch);
 
 // get lunch detail
 router.get('/:lunchId', lunchControllers.getLunchDetail);
