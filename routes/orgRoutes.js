@@ -3,12 +3,14 @@ const express = require('express');
 const router = express.Router();
 const {
   createOrganization,
-  sendInvite,
+  sendInviteCode,
+  confirmInviteCode,
   updateOrgDetails,
 } = require('../controllers/organizationController');
 
 router.post('/create', createOrganization);
-router.post('send-invite', sendInvite);
+router.post('/send-invite', sendInviteCode);
+router.post('/confirm-invite', confirmInviteCode);
 router.put('/update-info', updateOrgDetails);
 
 module.exports = router;
