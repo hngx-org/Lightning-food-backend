@@ -1,5 +1,5 @@
 const dotenv = require('dotenv');
-
+const { createCustomError } = require('../errors/custom-errors');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/user.model');
 
@@ -61,9 +61,9 @@ async function auth(req, res, next) {
  * @param {*} next
  */
 function adminUser(req, res, next) {
-  const { isAdmin } = req.user;
+  const { is_admin } = req.user;
   try {
-    if (!isAdmin) {
+    if (!is_admin) {
       throw createCustomError('Not admin user', 403);
     }
     next();
