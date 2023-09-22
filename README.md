@@ -56,22 +56,24 @@ This API is equipped with functionalities to dynamically handle request/response
 |5.| Get Me | `/api/users/me` | `GET` |Fetches a user profile| _Admin/User_ |
 |6.| Get User by id | `/api/users/:id` | `GET` |Finds a user by id| _Admin/User_ |
 |7.| Get All Users | `/api/users/` | `GET` |Finds all users for an organization| _Admin_ |
-|8.| Update User | `/api/user/:id` | `PUT` |Updates a user by id| _Admin/User_ |
-|9.| Delete User| `/api/users/:id` | `DELETE` |Deletes a user| _Admin/User_ |
-|10.| Logout User | `/api/auth/logout` | `POST` |For loggin a user out| _Admin/User_ |
+|8.| Forgot Password | `/api/users/forgot-password` | `POST` |Directs to reset password| _Admin/User_ |
+|9.| Reset password | `/api/users/reset-password` | `PATCH` |Resets password| _Admin/User_ |
+|10.| Update User | `/api/user/:id` | `PUT` |Updates a user by id| _Admin/User_ |
+|11.| Delete User| `/api/users/:id` | `DELETE` |Deletes a user| _Admin/User_ |
+|12.| Logout User | `/api/auth/logout` | `POST` |For loggin a user out| _Admin/User_ |
 |   |                  |_**Organization Routes**_ (`/api/organization`)||
-|11.| Create Organization| `/api/organization/create`| `POST`| Creates new organization | _Admin_ |
-|12.| Confirm Invite | `/api/organization/confirm-invite` | `POST`| Confirms invite to an org. | _Admin_ |
-|13.| Send Invite | `/api/organization/send-invite` | `POST`| Sends user an invite to join org. | _Admin_ |
-|14.| Update Organization | `/api/organization/update-info` | `PUT`| Updates the organization details | _Admin_ |
+|13.| Create Organization| `/api/organization/create`| `POST`| Creates new organization | _Admin_ |
+|14.| Confirm Invite | `/api/organization/confirm-invite` | `POST`| Confirms invite to an org. | _Admin_ |
+|15.| Send Invite | `/api/organization/send-invite` | `POST`| Sends user an invite to join org. | _Admin_ |
+|16.| Update Organization | `/api/organization/update-info` | `PUT`| Updates the organization details | _Admin_ |
 |   |                  |_**Lunch Routes**_ (`/api/lunch`)||
-|15.| Get All Lunch | `/api/lunch/` | `GET`| Fetches all available lunch | _Admin/User_ |
-|16.| Gift Lunch | `/api/lunch/send/:id` | `POST`| Send lunch to a user by id | _Admin/User_ |
-|17.| Get Lunch Detail | `/api/lunch/:lunchId` | `GET`| Fetches details for a lunch by id | _Admin/User_ |
-|18.| Get Lunch by UserID | `/api/lunch/user/:userId` | `GET`| Fetches lunch for a user by id | _Admin/User_ |
+|17.| Get All Lunch | `/api/lunch/` | `GET`| Fetches all available lunch | _Admin/User_ |
+|18.| Gift Lunch | `/api/lunch/send/:id` | `POST`| Send lunch to a user by id | _Admin/User_ |
+|19.| Get Lunch Detail | `/api/lunch/:lunchId` | `GET`| Fetches details for a lunch by id | _Admin/User_ |
+|20.| Get Lunch by UserID | `/api/lunch/user/:userId` | `GET`| Fetches lunch for a user by id | _Admin/User_ |
 |   |                  |_**Withdrawal[Redeem] Routes**_ (`/api/withdrawals`)||
-|19.| Redeem Lunch | `/api/withdrawals/withdraw` | `POST`| withdraws the monetary value for a lunch | _Admin/User_ |
-|20.| Withdrawal History | `/api/withdrawals/history` | `GET`| withdraws the monetary value for a lunch | _Admin/User_ |
+|21.| Redeem Lunch | `/api/withdrawals/withdraw` | `POST`| withdraws the monetary value for a lunch | _Admin/User_ |
+|22.| Withdrawal History | `/api/withdrawals/history` | `GET`| withdraws the monetary value for a lunch | _Admin/User_ |
 
 ### Request Methods Response Formats and Status Codes Used
 
