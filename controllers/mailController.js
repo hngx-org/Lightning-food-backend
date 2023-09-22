@@ -1,4 +1,8 @@
 // import bcrypt from "bcryptjs"
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { createCustomError } = require('../errors/custom-errors');
+const User = require('../models/user.model');
 const dotenv = require('dotenv');
 // const { transport } = require('../config/nodemailerConfig.js');
 
@@ -7,20 +11,35 @@ const { transport } = {};
 dotenv.config();
 // const teamMail = process.env.TEAM_MAIL;
 
-const issueOtp = async () => {
-  const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
-  // const saltRounds = 12; //This should be in environment variable
+const issueOtp = async (userId, email) => {
+    try{
+      const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
+    //const saltRounds = 12; //This should be in environment variable
 
-  //   const hashedOTP = await bcrypt.hash(otp, saltRounds);
+    const hashedOTP = await bcrypt.hash(otp, process.env.SALT_ROUNDS);
 
-  //Save hased otp with userId and email for confirmation purposes
-  //Hased OTP should be saved to db for confirmation later,then deleted upon successful authentication
+    //Save hased otp with userId and email for confirmation purposes
+    //Hased OTP should be saved to db for confirmation later,then deleted upon successful authentication
+    await otp.create({
+      user_id: userId,
+      email,
+      hashed_otp: hashedOTP,
+    });
 
-  return {
-    userOtp: otp,
-    timeLeft: `1 hour`,
-  };
+    return {
+      userOtp: otp,
+      timeLeft: `1 hour`,
+    };
+    
+  }catch(error){
+    console.log(error);
+    return {
+      status: false,
+      message: `internal server error`,
+  }
+  }
 };
+
 
 const otpMessage = (otp, timeLeft) => {
   const template = `

@@ -5,7 +5,7 @@ const { transport } = require('../config/nodemailerConfig');
 dotenv.config();
 // const teamMail = process.env.TEAM_MAIL;
 
-const issueOtp = async () => {
+const issueOtp = async (userId, email) => {
   const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
   // const saltRounds = 12; //This should be in environment variable
 

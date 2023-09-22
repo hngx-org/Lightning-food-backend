@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 const User = require('../models/user.model'); //import user model
 const { createCustomError } = require('../errors/custom-errors');
-const { sendUserOtp } = require('./mailController');
+const { sendUserOtp, issueOtp } = require('./mailController');
 
 async function getMe(req, res, next) {
   try {
@@ -108,6 +108,7 @@ async function updateUser(req, res, next) {
       bank_name,
       bank_code,
       bank_number,
+      password_hash
     } = req.body;
 
     // Check if the user exists
@@ -128,6 +129,7 @@ async function updateUser(req, res, next) {
     user.bank_name = bank_name || user.bank_name;
     user.bank_code = bank_code || user.bank_code;
     user.bank_number = bank_number || user.bank_number;
+    user.password_hash = password_hash || user.password_hash;
 
     await user.save();
 
@@ -171,32 +173,64 @@ async function forgotPassword(req, res, next) {
   res.status(status).json(response);
 }
 
+const validateOtp = async (res, req, next) => {
+  const {email, otp} = req.body;
+
+
+  try {
+    // Find the user by email
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      throw createCustomError('User not found', 404);
+    }
+    const  hashedOtp = await bcrypt.hash(otp, process.env.SALT_ROUNDS); 
+    // Check if the OTP provided in the request matches the user's stored OTP
+    if (user.otp !== hashedOtp) {
+      throw createCustomError('Invalid OTP', 400);
+    }
+
+    next(); // Proceed to the next middleware or route handler if OTP is valid
+  } catch (error) {
+    next(error); // Pass any errors to the error handling middleware
+  }
+}
+
 async function resetPassword(req, res) {
   const { email, otp, password } = req.body;
-  if (!(email && otp && password)) {
-    return res.status(404).json({
-      success: false,
-      message: 'User not found',
-    });
+  try{
+      if (!(email && otp && password)) {
+        return res.status(404).json({
+          success: false,
+          message: 'User not found',
+        });
+      }
+
+      const user = await User.findOne({ where: { email } });
+      if (!user) {
+        throw createCustomError('Email Address Not Recognized', 404);
+      }
+
+      const response = await validateOtp(email, otp)
+
+      //input new password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+
+      await User.update({ password_hash: hashedPassword }, { where: { email } });
+      // update password
+      //user.password = hashedPassword;
+      //await user.save();
+
+      return res.status(200).json({
+        success: true,
+        message: 'Password reset successfully',
+        data: null,
+      });
+  } catch (error) {
+    next(error)
   }
-
-  const user = await User.findOne({ where: { email } });
-  if (!user) {
-    throw createCustomError('Invalid credentials', 404);
-  }
-
-  // const response = await verifyOtp(user.id, otp)
-
-  // update password
-  user.password = password;
-  await user.save();
-
-  res.status(200).json({
-    success: true,
-    message: 'Password reset successfully',
-    data: null,
-  });
-}
+};
 
 module.exports = {
   getMe,
