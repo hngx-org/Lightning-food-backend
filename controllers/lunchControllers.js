@@ -33,7 +33,7 @@ const getAllLunch = async (req, res) => {
       data: allLunches,
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
@@ -105,7 +105,7 @@ const sendLunch = async (req, res) => {
       data: lunch,
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
@@ -149,7 +149,7 @@ async function redeemGiftController(req, res) {
       },
     });
   } catch (error) {
-    next(error)
+    return next(error)
   }
 }
 
@@ -167,7 +167,7 @@ async function getLunchDetailsByUserId(req, res, next) {
     // Return the lunch details as JSON
     res.json({ userId, lunchDetails });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 }
 
@@ -185,7 +185,7 @@ async function getLunchDetail(req, res, next) {
     // Return the lunch details as JSON
     res.json({ lunchDetails });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 }
 
