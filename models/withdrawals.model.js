@@ -6,13 +6,12 @@ const Withdrawal = sequelize.define(
   'Withdrawal',
   {
     id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
       primaryKey: true,
     },
     user_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
+      type: DataTypes.INTEGER,
       references: {
         model: User,
         key: 'id',

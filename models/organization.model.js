@@ -5,23 +5,25 @@ const Organization = sequelize.define(
   'Organization',
   {
     id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
       primaryKey: true,
     },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
     },
     lunch_price: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.DECIMAL(10, 2),
       defaultValue: 1000,
       allowNull: false,
     },
     currency_code: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(4),
       allowNull: false,
+    },
+    is_deleted: {
+      type: DataTypes.BOOLEAN,
     },
   },
   {
