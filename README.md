@@ -81,7 +81,7 @@ This API is equipped with functionalities to dynamically handle request/response
 |:---|:---------------:|:------------|
 |1. | `GET` | Fetch item(s) |
 |2. | `POST` | Send item(s) |
-|3. | `PUT` | Update item(s) |
+|3. | `PUT` or `PATCH` | Update item(s) |
 |4. | `DELETE` | Remove or Delete item(s) |
 
 |S/N | Status Code | Description |
@@ -147,5 +147,5 @@ For effectively testing the API, these credentials were setup in the `.env` file
 See more `dev-dependencies` in the [`package.json`](package.json) file.
 
 ## Contributors
-@ Team Panther, September 2023
+@ Team Lightning, September 2023
 [Move back up](#free-lunch-app)
