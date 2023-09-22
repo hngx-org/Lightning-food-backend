@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 const User = require('../models/user.model'); //import user model
 const { createCustomError } = require('../errors/custom-errors');
+const { sendUserOtp } = require('./mailController');
 
 async function getMe(req, res, next) {
   try {
@@ -146,36 +147,35 @@ async function updateUser(req, res, next) {
   }
 }
 
-
 async function forgotPassword(req, res, next) {
-  const { email } = req.body
+  const { email } = req.body;
   if (!email) {
     return res.status(404).json({
       success: false,
-      message: 'User not found'
+      message: 'User not found',
     });
   }
 
   const user = await User.findOne({ where: { email } });
-    if (!user) {
-      throw createCustomError('Invalid credentials', 404);
+  if (!user) {
+    throw createCustomError('Invalid credentials', 404);
   }
-  
-  const response = await sendUserOtp(user.id, email)
+
+  const response = await sendUserOtp(user.id, email);
 
   let status = 500;
   if (response.status === true) {
     status = 202;
   }
-  res.status(500).json(response) 
+  res.status(status).json(response);
 }
 
-async function resetPassword() {
-  const { email, otp, password } = req.body
-  if (!(email && otp  && password)) {
+async function resetPassword(req, res) {
+  const { email, otp, password } = req.body;
+  if (!(email && otp && password)) {
     return res.status(404).json({
       success: false,
-      message: 'User not found'
+      message: 'User not found',
     });
   }
 
@@ -187,8 +187,8 @@ async function resetPassword() {
   // const response = await verifyOtp(user.id, otp)
 
   // update password
-  user.password = password
-  await user.save()
+  user.password = password;
+  await user.save();
 
   res.status(200).json({
     success: true,
@@ -204,5 +204,5 @@ module.exports = {
   updateUser,
   deleteUser,
   forgotPassword,
-  resetPassword
+  resetPassword,
 };
