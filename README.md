@@ -138,7 +138,7 @@ For effectively testing the API, these credentials were setup in the `.env` file
 See more `dev-dependencies` in the [`package.json`](package.json) file.
 
 ## Contributors
-@ Team Panther, September 2023
+@ Team Lightning, September 2023
 [Move back up](#free-lunch-app)
 
 
