@@ -77,7 +77,6 @@ const loginUser = async (req, res, next) => {
       throw createCustomError('Fill all required fields', 400);
     }
 
-    console.log(1);
     const user = await User.findOne({ where: { email } });
     if (!user) {
       throw createCustomError('Invalid credentials', 404);
@@ -177,7 +176,7 @@ async function createOrgAndUser(req, res, next) {
     }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    console.log(organization.id);
+
     const user = {
       first_name,
       last_name,
@@ -191,10 +190,6 @@ async function createOrgAndUser(req, res, next) {
 
     const newUser = await User.create(user);
     delete newUser.password_hash;
-
-    const userWithoutPassword = Object.assign(newUser.toJSON);
-    delete userWithoutPassword.password_hash;
-    console.log(userWithoutPassword);
 
     return res.status(200).json({
       success: true,
@@ -212,7 +207,6 @@ async function createOrgAndUser(req, res, next) {
       errorMessage = errorMessage[0].toUpperCase() + errorMessage.slice(1);
       next(createCustomError(errorMessage, 400));
     }
-    console.log(error);
     next(error.message);
   }
 }
