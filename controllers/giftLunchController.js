@@ -4,6 +4,7 @@ const User = require('../models/user.model');
 const response = require('../utils/response');
 
 const giftLunch = async (req, res) => {
+  console.log('gift lunch');
   try {
     const userId = req.user.id;
 
@@ -19,7 +20,13 @@ const giftLunch = async (req, res) => {
     if (!user)
       return res.status(404).json(response(false, 'User does not exist', null));
 
-    const lunch = { receiverId, quantity, note, redeemed: false };
+    const lunch = {
+      senderId: userId,
+      receiverId,
+      quantity,
+      note,
+      redeemed: true,
+    };
 
     // Create Launch
     const newLunch = await Lunch.create(lunch);
@@ -28,16 +35,25 @@ const giftLunch = async (req, res) => {
 
     const receiver = await User.findOne({ where: { id: receiverId } });
 
+    const org = await user.getOrganization();
+
     //Update the sender's balance
-    await sender.update({ balance: sender.balance - quantity });
+    await sender.update({
+      lunch_credit_balance:
+        sender.lunch_credit_balance - quantity * org.lunch_price,
+    });
 
     //Update the receiver's balance
-    await receiver.update({ balance: receiver.balance + quantity });
+    await receiver.update({
+      lunch_credit_balance:
+        receiver.lunch_credit_balance + quantity * org.lunch_price,
+    });
 
     return res
       .status(201)
       .json(response(true, 'Lunch gifted successfully', { lunch: newLunch }));
   } catch (error) {
+    console.log(error);
     return res.status(500).json(response(false, 'Internal Server Error', null));
   }
 };

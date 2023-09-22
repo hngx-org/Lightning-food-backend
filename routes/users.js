@@ -9,8 +9,6 @@ const {
   forgotPassword,
   resetPassword,
   deleteUser,
-  forgotPassword,
-  resetPassword,
 } = require('../controllers/userController');
 const { auth } = require('../middlewares/auth');
 

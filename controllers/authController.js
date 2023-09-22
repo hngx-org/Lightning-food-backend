@@ -31,17 +31,17 @@ async function createUser(req, res, next) {
 
     // Validate input data
 
-    if (!first_name || !last_name || !email || !password || !token) {
+    if (!first_name || !last_name || !email || !password) {
       // TODO: truly validate data
       throw createCustomError('Missing required fields', 400);
     }
 
     // Check if the token is valid and retrieve org_id
-    const invite = await Invite.findOne({ where: { token } });
+    // const invite = await Invite.findOne({ where: { token } });
 
-    if (!invite || new Date() > invite.ttl) {
-      throw createCustomError('Invalid or expired invitation token', 400);
-    }
+    // if (!invite || new Date() > invite.ttl) {
+    //   throw createCustomError('Invalid or expired invitation token', 400);
+    // }
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);

@@ -3,6 +3,7 @@ const { Op } = require('sequelize');
 const Lunch = require('../models/lunches.model');
 const User = require('../models/user.model');
 const Withdrawals = require('../models/withdrawals.model');
+const { createCustomError } = require('../errors/custom-errors');
 
 //GET endpoint to retrieve all available lunches for a user
 const getAllLunch = async (req, res) => {
@@ -137,7 +138,9 @@ async function getLunchDetailsByUserId(req, res, next) {
 
     if (!lunchDetails) {
       // If no lunch details found for the user, return a 404 response
-      return res.status(404).json({ error: 'Lunch details not found for this user.' });
+      return res
+        .status(404)
+        .json({ error: 'Lunch details not found for this user.' });
     }
 
     // Return the lunch details as JSON
@@ -147,4 +150,28 @@ async function getLunchDetailsByUserId(req, res, next) {
   }
 }
 
-module.exports = { getAllLunch, sendLunch, redeemGiftController, getLunchDetailsByUserId };
+async function getLunchDetail(req, res, next) {
+  try {
+    const { lunchId } = req.params;
+    // Use Sequelize to find the user's lunch details based on the provided user ID
+    const lunchDetails = await Lunch.findByPk(lunchId);
+
+    if (!lunchDetails) {
+      // If no lunch details found for the user, return a 404 response
+      throw createCustomError('Lunch details not found for this user.', 404);
+    }
+
+    // Return the lunch details as JSON
+    res.json({ lunchDetails });
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = {
+  getAllLunch,
+  sendLunch,
+  redeemGiftController,
+  getLunchDetailsByUserId,
+  getLunchDetail,
+};
