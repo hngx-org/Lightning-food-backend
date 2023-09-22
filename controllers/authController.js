@@ -150,7 +150,7 @@ async function createOrgAndUser(req, res, next) {
     //   throw createCustomError('Missing required fields', 400);
     // }
 
-    if (!email || !password || !org_name) {
+    if (!email || !password || !org_name || !lunch_price) {
       // TODO: truly validate data
       throw createCustomError('Missing required fields', 400);
     }
@@ -186,7 +186,7 @@ async function createOrgAndUser(req, res, next) {
       password_hash: hashedPassword,
       is_admin: true,
       org_id: organization.id,
-      lunch_credit_balance: 100000,
+      lunch_credit_balance: 10000,
     };
 
     const newUser = await User.create(user);
