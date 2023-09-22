@@ -4,7 +4,7 @@ const app = require('../app');
 
 beforeAll(async () => {
   try {
-    await sequelize.sync().then();
+    await sequelize.sync();
   } catch (error) {
     console.error('Database sync error:', error);
   }
