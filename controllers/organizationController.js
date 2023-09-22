@@ -37,78 +37,95 @@ const createOrganization = async (req, res, next) => {
   }
 };
 
-const sendInviteCode = async (req, res) => {
-  const { email, organizationId } = req.body;
+const sendInviteCode = async (req, res, next) => {
+  try {
+    const { email, organizationId } = req.body;
 
-  // Generate a random verification code
-  const verificationCode = Math.floor(
-    100000 + Math.random() * 900000,
-  ).toString();
+    // Generate a random verification code
+    const verificationCode = Math.floor(
+      100000 + Math.random() * 900000,
+    ).toString();
 
-  // Save the invitation details in the database
-  console.log(email);
-  await orgInvites.create({
-    email: email,
-    token: verificationCode,
-    id: organizationId,
-  });
+    // Save the invitation details in the database
+    console.log(email);
+    await orgInvites.create({
+      email: email,
+      token: verificationCode,
+      org_id: organizationId,
+    });
 
-  // Send an email with the verification code
-  const mailOptions = {
-    from: 'fredrickraymond2004@gmail.com', // Your email address
-    to: email, // User's email address
-    subject: 'Email Verification',
-    text: `Your verification code is: ${verificationCode}`,
-  };
+    // Send an email with the verification code
+    const mailOptions = {
+      from: process.env.MAIL_USER, // Your email address
+      to: email, // User's email address
+      subject: 'Email Verification',
+      text: `Your verification code is: ${verificationCode}`,
+    };
 
-  // Send the email
-  await transporter.sendMail(mailOptions);
+    // Send the email
+    await transporter.sendMail(mailOptions);
 
-  res.status(200).json({
-    success: true,
-    message: 'Invitation sent successfully',
-    data: null,
-  });
+    res.status(200).json({
+      success: true,
+      message: 'Invitation sent successfully',
+      data: null,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const confirmInviteCode = async (req, res, next) => {
   try {
-    const { email, verificationCode } = req.body;
+    const { verificationCode } = req.body;
 
     // Validate email and verification code
-    if (!email || !verificationCode) {
+    if (!verificationCode) {
       return res.status(400).json({
         success: false,
-        message: 'Email and verification code are required.',
+        message: 'Verification code is required.',
         data: null,
       });
     }
 
-    // Verifing the verification code against the stored code in your database
-    const user = await orgInvites.findOne({
-      where: { email, token: verificationCode },
+    const invite = await orgInvites.findOne({
+      where: { token: verificationCode },
     });
 
-    if (!user || user.token !== verificationCode) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid email or verification code.',
-        data: null,
+    if (invite) {
+      res.email = invite.email;
+      res.org_id = invite.org_id;
+      res.status(200).json({
+        success: true,
+        message: 'Token verified',
+        data: {
+          org_id: invite.org_id,
+          email: invite.email,
+        },
       });
+    } else {
+      createCustomError('Invalid verification code', 400);
     }
 
-    // Mark the email as verified
-    user.email = true;
-    user.token = null; // Optional, clear the verification code from the database or not
-    //  There is supposed to be a field where we set the state to be true once token is validated
+    // // Verifing the verification code against the stored code in your database
+    // const user = await orgInvites.findOne({
+    //   where: { email, token: verificationCode },
+    // });
 
-    await user.save();
+    // if (!user || user.token !== verificationCode) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: 'Invalid email or verification code.',
+    //     data: null,
+    //   });
+    // }
 
-    res.status(200).json({
-      success: true,
-      message: 'Token verified',
-      data: null,
-    });
+    // // Mark the email as verified
+    // user.email = true;
+    // user.token = null; // Optional, clear the verification code from the database or not
+    // //  There is supposed to be a field where we set the state to be true once token is validated
+
+    // await user.save();
   } catch (error) {
     next(error);
   }
