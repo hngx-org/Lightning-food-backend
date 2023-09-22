@@ -167,6 +167,7 @@ async function forgotPassword(req, res, next) {
   if (response.status === true) {
     status = 202;
   }
+
   res.status(status).json(response);
 }
 
