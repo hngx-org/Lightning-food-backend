@@ -6,6 +6,8 @@ const {
   getUserById,
   getAllUsers,
   updateUser,
+  forgotPassword,
+  resetPassword,
   deleteUser,
   forgotPassword,
   resetPassword,
