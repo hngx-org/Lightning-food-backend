@@ -91,7 +91,8 @@ User.prototype.toJSON = function () {
   return values;
 };
 
-(async () => {
-  // await User.sync({ alter: true });
-})();
+
+// (async () => {
+//   await User.sync({ alter: true });
+// })();
 module.exports = User;
