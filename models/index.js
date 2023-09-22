@@ -17,14 +17,14 @@ const Lunch = connection.define('Lunch', {
       key: 'org_id',
     },
   },
-  senderId: {
+  sender_id: {
     type: Sequelize.TEXT,
     references: {
       model: 'Users',
       key: 'id',
     },
   },
-  receiverId: {
+  receiver_id: {
     type: Sequelize.TEXT,
     references: {
       model: 'Users',

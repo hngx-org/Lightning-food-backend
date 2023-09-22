@@ -2,16 +2,18 @@
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const { createCustomError } = require('../errors/custom-errors');
-const  User  = require('../models/user.model');
+const User = require('../models/user.model');
 
 dotenv.config();
 async function auth(req, res, next) {
   try {
-    const token = req.header('Authorization').replace('Bearer ', ''); // Remove 'Bearer ' from the token string
+    let token = req.header('Authorization');
 
     if (!token) {
       throw new Error('Token is missing'); // Handle missing token
     }
+
+    token = token.replace('Bearer ', ''); // Remove 'Bearer ' from the token string
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
     const user = await User.findByPk(decoded.id);

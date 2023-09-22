@@ -37,7 +37,7 @@ async function withdrawCashController(req, res, next) {
     });
     // const sender = await User.findOne({ where: { email } });
     // const senderLunchEntry = await Lunch.findOne({
-    //   where: { senderId: sender.id },
+    //   where: { sender_id: sender.id },
     // });
     // await senderLunchEntry.update({ redeemed: true });
     // await senderLunchEntry.save();
