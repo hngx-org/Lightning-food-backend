@@ -140,19 +140,20 @@ async function createOrgAndUser(req, res, next) {
     } = req.body;
 
     // Validate input data
+    // if (
+    //   !first_name ||
+    //   !last_name ||
+    //   !email ||
+    //   !password ||
+    //   !org_name ||
+    //   !lunch_price ||
+    //   !currency_code
+    // ) {
+    //   // TODO: truly validate data
+    //   throw createCustomError('Missing required fields', 400);
+    // }
 
-    if (
-      !first_name ||
-      !last_name ||
-      !email ||
-      !password ||
-      !org_name ||
-      !lunch_price ||
-      !currency_code
-    ) {
-      // TODO: truly validate data
-      throw createCustomError('Missing required fields', 400);
-    }
+    
     // Create the organization
     const organization = await Organization.create({
       name: org_name,
