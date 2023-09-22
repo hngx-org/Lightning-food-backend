@@ -1,6 +1,9 @@
+const dotenv = require('dotenv');
+
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/user.model');
 
+dotenv.config();
 async function auth(req, res, next) {
   try {
     const token = req.header('Authorization').replace('Bearer ', ''); // Remove 'Bearer ' from the token string
@@ -8,8 +11,8 @@ async function auth(req, res, next) {
     if (!token) {
       throw new Error('Token is missing'); // Handle missing token
     }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
-    const decoded = jwt.verify(token, process.env.JWT_SIGNATURE);
 
     const user = await User.findByPk(decoded.id);
 
@@ -19,7 +22,9 @@ async function auth(req, res, next) {
 
     req.user = user; // Store the user object in the request
     req.token = token;
+
     next(); // Call next() to continue with the next middleware
+
   } catch (error) {
     console.error(error.message);
     next(error); // Pass the error to the error handling middleware (if available)
@@ -48,4 +53,22 @@ async function auth(req, res, next) {
 //   }
 // }
 
-module.exports = auth;
+/**
+ * checks if the user is an admin user
+ * @requires auth middleware be added first
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @param {*} next
+ */
+function adminUser(req, res, next) {
+  const { isAdmin } = req.user;
+  try {
+    if (!isAdmin) {
+      throw createCustomError('Not admin user', 403);
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
+module.exports = { auth, adminUser };

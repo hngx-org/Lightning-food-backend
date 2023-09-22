@@ -3,7 +3,10 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
 const { createCustomError } = require('../errors/custom-errors');
+const Organization = require('../models/organization.model');
+const OrgLunchWallet = require('../models/org_lunch_wallet.model');
 const Invite = require('../models/organisation_invite.model');
+// const { sendUserOtp } = require('./mailController');
 
 const secretKey = process.env.JWT_SECRET_KEY;
 
@@ -28,17 +31,17 @@ async function createUser(req, res, next) {
 
     // Validate input data
 
-    if (!first_name || !last_name || !email || !password || !token) {
+    if (!first_name || !last_name || !email || !password) {
       // TODO: truly validate data
       throw createCustomError('Missing required fields', 400);
     }
 
     // Check if the token is valid and retrieve org_id
-    const invite = await Invite.findOne({ where: { token } });
+    // const invite = await Invite.findOne({ where: { token } });
 
-    if (!invite || new Date() > invite.ttl) {
-      throw createCustomError('Invalid or expired invitation token', 400);
-    }
+    // if (!invite || new Date() > invite.ttl) {
+    //   throw createCustomError('Invalid or expired invitation token', 400);
+    // }
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -140,4 +143,93 @@ const logoutUser = (req, res) => {
   }
 };
 
-module.exports = { createUser, loginUser, logoutUser };
+async function createOrgAndUser(req, res, next) {
+  try {
+    const {
+      first_name,
+      last_name,
+      email,
+      phone,
+      password,
+      org_name,
+      lunch_price,
+      currency_code,
+    } = req.body;
+
+    // Validate input data
+
+    if (
+      !first_name ||
+      !last_name ||
+      !email ||
+      !password ||
+      !org_name ||
+      !lunch_price ||
+      !currency_code
+    ) {
+      // TODO: truly validate data
+      throw createCustomError('Missing required fields', 400);
+    }
+    // Create the organization
+    const organization = await Organization.create({
+      name: org_name,
+      lunch_price,
+      currency_code,
+    });
+
+    const lunchWallet = await OrgLunchWallet.create({
+      org_id: organization.id,
+      balance: 10000,
+    });
+
+    // res.status(201).json({
+    //   success: true,
+    //   message: 'Organization and Lunch Wallet created successfully',
+    //   data: { organization, lunchWallet },
+    // });
+    if (!organization || !lunchWallet) {
+      throw createCustomError("Can't create organization", 400);
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    console.log(organization.id);
+    const user = {
+      first_name,
+      last_name,
+      email,
+      phone,
+      password_hash: hashedPassword,
+      is_admin: true,
+      org_id: organization.id,
+      lunch_credit_balance: 100000,
+    };
+
+    const newUser = await User.create(user);
+    delete newUser.password_hash;
+
+    const userWithoutPassword = Object.assign(newUser.toJSON);
+    delete userWithoutPassword.password_hash;
+    console.log(userWithoutPassword);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Org and User registered successfully',
+      data: {
+        user: newUser,
+        organization: organization.dataValues,
+        lunchWallet: lunchWallet.dataValues,
+      },
+    });
+  } catch (error) {
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      // Unique constraint violation (duplicate email)
+      let errorMessage = error.errors[0].message;
+      errorMessage = errorMessage[0].toUpperCase() + errorMessage.slice(1);
+      next(createCustomError(errorMessage, 400));
+    }
+    console.log(error);
+    next(error.message);
+  }
+}
+
+module.exports = { createUser, loginUser, logoutUser, createOrgAndUser };
