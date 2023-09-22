@@ -45,18 +45,6 @@ const sendLunch = async (req, res) => {
   const { receiver_id, quantity, note } = req.body;
 
   try {
-    console.log(
-      'The user',
-      req.user.id,
-      'Rec:',
-      receiver_id,
-      'Qty:',
-      quantity,
-      'note:',
-      note,
-      'Org:',
-      req.user.org_id,
-    );
     //Create a new lunch
     const lunch = await Lunch.create({
       sender_id: req.user.id,
@@ -76,32 +64,21 @@ const sendLunch = async (req, res) => {
     ]);
 
     // Check if the sender has enough balance
-    if (sender.lunch_credit_balance < totalLunchPrice) {
-      throw createCustomError('Insufficient balance.', 401);
+    if (
+      sender.lunch_credit_balance < totalLunchPrice ||
+      sender.lunch_credit_balance - totalLunchPrice < 0
+    ) {
+      return createCustomError('Insufficient balance', 400);
     }
     // Debit the sender's balance
     await sender.update({
       lunch_credit_balance: sender.lunch_credit_balance - totalLunchPrice,
     });
 
-    console.log('Total lunch costs ', totalLunchPrice);
-    console.log(
-      'Sender',
-      sender.lunch_credit_balance,
-      'Receiver',
-      receiver.lunch_credit_balance,
-    );
     // Credit the receiver's balance
     await receiver.update({
       lunch_credit_balance: receiver.lunch_credit_balance + totalLunchPrice,
     });
-
-    console.log(
-      'Sender',
-      sender.lunch_credit_balance,
-      'Receiver',
-      receiver.lunch_credit_balance,
-    );
 
     res.status(201).json({
       success: true,

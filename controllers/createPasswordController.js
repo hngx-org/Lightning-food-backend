@@ -46,4 +46,4 @@ const createPasswordController = async (req, res, next) => {
   }
 };
 
-module.exports = createPasswordController;
+module.exports = { createPasswordController };
