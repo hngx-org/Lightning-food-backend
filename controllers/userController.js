@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 const User = require('../models/user.model'); //import user model
 const { createCustomError } = require('../errors/custom-errors');
+const bcrypt = require("bcrypt");
 
 async function getMe(req, res, next) {
   try {
@@ -40,6 +41,33 @@ async function getUserById(req, res, next) {
     });
   } catch (error) {
     next(error);
+  }
+}
+
+
+async function updatePassword(req,res,next){
+  const {password} = req.body;
+  try{
+    const user = await  User.findOne({where:{id:req.user.id}})
+    const newPassword = await bcrypt.hash(password, 12);
+    user.password_hash = newPassword;
+   await user.save()
+   return res.status(200).json({
+    success:true,
+    message:"Password successfully updated",
+    data:null
+
+   })
+
+    
+  }catch(err){
+    return res.status(500).json({
+      success: false,
+      message: 'Internal Server Error',
+      data: null,
+
+    })
+
   }
 }
 
@@ -204,5 +232,6 @@ module.exports = {
   updateUser,
   deleteUser,
   forgotPassword,
+  updatePassword,
   resetPassword
 };
