@@ -23,6 +23,10 @@ router.get('/', getAllLunch);
 // router.post('/send', giftLunch);
 router.post('/send', sendLunch);
 
+// Redeem Launch
+// router.post('/redeem', redeemGiftController);
+router.post('/redeem', redeemGiftController);
+
 // get lunch detail
 router.get('/:lunchId', getLunchDetail);
 
