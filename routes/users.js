@@ -9,7 +9,6 @@ const {
   forgotPassword,
   resetPassword,
   deleteUser,
-  createUser,
 } = require('../controllers/userController');
 const { auth, adminUser } = require('../middlewares/auth');
 
@@ -19,7 +18,6 @@ router.post('/reset-password', resetPassword);
 
 router.use(auth);
 
-router.post('/sigup', createUser);
 router.get('/me', getMe);
 router.get('/:id', getUserById);
 router.get('/', getAllUsers);

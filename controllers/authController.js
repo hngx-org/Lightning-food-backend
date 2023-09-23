@@ -8,67 +8,78 @@ const OrgLunchWallet = require('../models/org_lunch_wallet.model');
 
 const secretKey = process.env.JWT_SECRET_KEY;
 
-// async function createUser(req, res, next) {
-//   try {
-//     const {
-//       first_name,
-//       last_name,
-//       phone,
-//       password,
-//       is_admin,
-//       profile_pic,
-//       lunch_credit_balance,
-//       refresh_token,
-//       bank_code,
-//       bank_name,
-//       bank_number,
-//     } = req.body;
+async function createUser(req, res) {
+  try {
+    const {
+      first_name,
+      last_name,
+      email,
+      phone,
+      password,
+      is_admin,
+      profile_pic,
+      org_id,
+      launch_credit_balance,
+      refresh_token,
+      bank_code,
+      bank_name,
+      bank_number,
+    } = req.body;
 
-//     // Validate input data
+    // Validate input data
+    if (!first_name || !last_name || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required fields',
+        data: null,
+      });
+    }
 
-//     // if (!first_name || !last_name || !email || !password) {
-//     //   // TODO: truly validate data
-//     //   throw createCustomError('Missing required fields', 400);
-//     // }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-//     const salt = await bcrypt.genSalt(10);
-//     const hashedPassword = await bcrypt.hash(password, salt);
+    const user = {
+      first_name: req.body.first_name,
+      last_name: req.body.last_name,
+      email: req.body.email,
+      phone: req.body.phone,
+      password_hash: hashedPassword,
+      is_admin,
+      profile_pic,
+      org_id,
+      launch_credit_balance,
+      refresh_token,
+      bank_code,
+      bank_name,
+      bank_number,
+    };
 
-//     const user = {
-//       first_name: 'John',
-//       last_name: 'Doe',
-//       email: req.email,
-//       phone,
-//       password_hash: hashedPassword,
-//       is_admin,
-//       profile_pic: 'https://cdn-icons-png.flaticon.com/512/147/147142.png',
-//       org_id: req.org_id,
-//       lunch_credit_balance: 10,
-//       refresh_token,
-//       bank_code,
-//       bank_name,
-//       bank_number,
-//     };
+    const newUser = await User.create(user);
+    delete newUser.password_hash;
 
-//     const newUser = await User.create(user);
-
-//     return res.status(200).json({
-//       success: true,
-//       message: 'User registered successfully',
-//       data: {
-//         user: newUser,
-//       },
-//     });
-//   } catch (error) {
-//     if (error.name === 'SequelizeUniqueConstraintError') {
-//       // Unique constraint violation (duplicate email)
-//       let errorMessage = error.errors[0].message;
-//       errorMessage = errorMessage[0].toUpperCase() + errorMessage.slice(1);
-//       next(createCustomError(errorMessage, 400));
-//     }
-//     next(error.message);
-//   }
-// }
+    res.status(200).json({
+      success: true,
+      message: 'User registered successfully',
+      data: {
+        user: newUser,
+      },
+    });
+  } catch (error) {
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      // Unique constraint violation (duplicate email)
+      return res.status(400).json({
+        success: false,
+        message: 'Email already exists',
+        data: null,
+      });
+    }
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+      data: null,
+    });
+  }
+}
 
 const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
@@ -149,13 +160,12 @@ async function createOrgAndUser(req, res, next) {
     // ) {
     //   // TODO: truly validate data
     //   throw createCustomError('Missing required fields', 400);
-    // }
-
+    // 
     if (!email || !password || !org_name) {
       // TODO: truly validate data
       throw createCustomError('Missing required fields', 400);
     }
-
+    
     // Create the organization
     const organization = await Organization.create({
       name: org_name,
@@ -218,4 +228,4 @@ async function createOrgAndUser(req, res, next) {
   }
 }
 
-module.exports = { loginUser, logoutUser, createOrgAndUser };
+module.exports = { loginUser, logoutUser, createOrgAndUser, createUser };
