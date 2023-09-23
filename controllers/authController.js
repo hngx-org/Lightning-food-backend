@@ -6,6 +6,7 @@ const { createCustomError } = require('../errors/custom-errors');
 const Organization = require('../models/organization.model');
 const OrgLunchWallet = require('../models/org_lunch_wallet.model');
 const { sendEmail } = require('./mailController');
+const transporter = require('../middlewares/emailConfig');
 
 const secretKey = process.env.JWT_SECRET_KEY;
 
@@ -230,10 +231,94 @@ async function createOrgAndUser(req, res, next) {
   }
 }
 
+async function forgotPassword(req, res, next) {
+  const { email } = req.body;
+  try {
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Enter your email address',
+      });
+    }
+
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      throw createCustomError('User not found', 404);
+    }
+
+    const verificationCode = Math.floor(
+      100000 + Math.random() * 900000,
+    ).toString();
+
+    // Send an email with the verification code
+    const mailOptions = {
+      from: process.env.MAIL_USER, // Your email address
+      to: email, // User's email address
+      subject: 'Password Reset',
+      text: `Your password reset code is: ${verificationCode}`,
+    };
+
+    // Send the email
+    await transporter.sendMail(mailOptions);
+    await user.update({ refresh_token: verificationCode });
+    // Assuming sendUserOtp returns the expected response object
+    console.log(user);
+    res.status(202).json({
+      success: true,
+      message: 'Password reset code sent successfully',
+      data: {
+        id: user.id,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    next(createCustomError('Invalid email', 401));
+  }
+}
+
+async function resetPassword(req, res, next) {
+  const { token, password } = req.body;
+
+  if (!token || !password) {
+    return res.status(400).json({
+      success: false,
+      message: 'Missing required fields',
+      data: null,
+    });
+  }
+  try {
+    const user = await User.findOne({ where: { refresh_token: token } });
+
+    if (!user) {
+      throw createCustomError('User not found', 404);
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    // Update the user's password
+    await user.update({ password_hash: hashedPassword });
+
+    await user.update({ refresh_token: null });
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Password reset successfully',
+      data: user,
+    });
+  } catch (error) {
+    next(createCustomError('Invalid reset code', 400));
+  }
+}
+
 module.exports = {
   validateEmail,
   createUser,
   loginUser,
   logoutUser,
   createOrgAndUser,
+  forgotPassword,
+  resetPassword,
 };
