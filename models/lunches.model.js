@@ -44,11 +44,7 @@ const Lunch = sequelize.define(
 // foreign key to user from receiver to allow usage like
 // lunch.user
 Lunch.belongsTo(User, {
-<<<<<<< HEAD
-  foreignKey: 'receiverId',
-=======
   foreignKey: 'reciever_id',
->>>>>>> 346a61d84ba8d12abff31149f8502567c63e6d0c
 });
 
 // foreign key to user from sender to allow usage like

@@ -19,7 +19,7 @@ router.post('/reset-password', resetPassword);
 
 router.use(auth);
 
-router.post('/sigup', createUser)
+router.post('/sigup', createUser);
 router.get('/me', getMe);
 router.get('/:id', getUserById);
 router.get('/', getAllUsers);

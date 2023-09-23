@@ -2,7 +2,7 @@
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const { createCustomError } = require('../errors/custom-errors');
-const  User  = require('../models/user.model');
+const User = require('../models/user.model');
 
 dotenv.config();
 async function auth(req, res, next) {
@@ -25,13 +25,8 @@ async function auth(req, res, next) {
 
     next(); // Call next() to continue with the next middleware
   } catch (error) {
-<<<<<<< HEAD
-    next(error);
-    //switch to  next(error) after error middleware have been created
-=======
     console.error(error.message);
     next(error); // Pass the error to the error handling middleware (if available)
->>>>>>> 346a61d84ba8d12abff31149f8502567c63e6d0c
   }
 }
 

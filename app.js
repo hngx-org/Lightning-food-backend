@@ -25,8 +25,8 @@ app.use('/api/withdrawals', withDrawalRoute);
 
 app.use('/', (req, res) => {
   res.status(200).send(`<h1>Welcome to Team Lightning Free Lunch App</h1>
-                       <br><p><a href=''>Click here</a> to go to the API doc<p>`)
-})
+                       <br><p><a href=''>Click here</a> to go to the API doc<p>`);
+});
 
 // Middlewares
 app.use(errorHandlerMiddleware);

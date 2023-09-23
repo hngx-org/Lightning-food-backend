@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+const bcrypt = require('bcryptjs');
 const User = require('../models/user.model'); //import user model
 const { createCustomError } = require('../errors/custom-errors');
 const { sendUserOtp } = require('./mailController');
@@ -47,7 +48,21 @@ async function getUserById(req, res, next) {
 // Controllers Function to register new user
 async function createUser(req, res) {
   try {
-    const { first_name, last_name, email, phone, password } = req.body;
+    const {
+      first_name,
+      last_name,
+      email,
+      phone,
+      password,
+      is_admin,
+      profile_pic,
+      org_id,
+      launch_credit_balance,
+      refresh_token,
+      bank_code,
+      bank_name,
+      bank_number,
+    } = req.body;
 
     // Validate input data
     if (!first_name || !last_name || !email || !password) {
@@ -67,6 +82,14 @@ async function createUser(req, res) {
       email,
       phone,
       password_hash: hashedPassword,
+      is_admin,
+      profile_pic,
+      org_id,
+      launch_credit_balance,
+      refresh_token,
+      bank_code,
+      bank_name,
+      bank_number,
     };
 
     const newUser = await User.create(user);
@@ -88,14 +111,13 @@ async function createUser(req, res) {
         data: null,
       });
     }
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+      data: null,
+    });
   }
 }
-
-return res.status(500).json({
-  success: false,
-  message: error.message,
-  data: null,
-});
 async function getAllUsers(req, res, next) {
   try {
     const users = await User.findAll({
