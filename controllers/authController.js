@@ -43,7 +43,7 @@ async function createUser(req, res, next) {
       is_admin: is_admin || false,
       profile_pic: 'https://cdn-icons-png.flaticon.com/512/147/147142.png',
       org_id: req.org_id || org_id,
-      lunch_credit_balance: lunch_credit_balance || 1000,
+      lunch_credit_balance: lunch_credit_balance || 5000,
       bank_code,
       bank_name,
       bank_number,
@@ -158,7 +158,7 @@ async function createOrgAndUser(req, res, next) {
     const organization = await Organization.create({
       name: org_name,
       lunch_price,
-      currency_code,
+      currency_code: currency_code || 'NGN',
     });
 
     const lunchWallet = await OrgLunchWallet.create({

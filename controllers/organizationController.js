@@ -7,6 +7,7 @@ const transporter = require('../middlewares/emailConfig');
 
 // Create a new organization and user (Admin user only)
 const createOrganization = async (req, res, next) => {
+  console.log('Hello');
   try {
     const { name, lunch_price, currency_code } = req.body;
 

@@ -20,8 +20,6 @@ async function withdrawCashController(req, res, next) {
     // eslint-disable-next-line camelcase
     userWithdrawing.update({ bank_number, bank_name, bank_code });
 
-    console.log(userWithdrawing.lunch_credit_balance);
-
     if (
       !userWithdrawing.lunch_credit_balance ||
       userWithdrawing.lunch_credit_balance === 0 ||
@@ -43,13 +41,11 @@ async function withdrawCashController(req, res, next) {
       data: newEntry,
     });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 }
 
 async function withdrawalHistory(req, res, next) {
-  console.log(req.user);
   try {
     const { id } = req.user;
 
