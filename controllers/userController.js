@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-const bcrypt = require('bcryptjs');
 const User = require('../models/user.model'); //import user model
 const { createCustomError } = require('../errors/custom-errors');
 const { sendUserOtp } = require('./mailController');
@@ -206,5 +205,4 @@ module.exports = {
   deleteUser,
   forgotPassword,
   resetPassword,
-  createUser,
 };

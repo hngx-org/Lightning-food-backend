@@ -27,7 +27,7 @@ async function createUser(req, res) {
     } = req.body;
 
     // Validate input data
-    if (!first_name || !last_name || !email || !password) {
+    if (!first_name || !last_name || !email || !password || !phone) {
       return res.status(400).json({
         success: false,
         message: 'Missing required fields',
@@ -160,12 +160,12 @@ async function createOrgAndUser(req, res, next) {
     // ) {
     //   // TODO: truly validate data
     //   throw createCustomError('Missing required fields', 400);
-    // 
+    //
     if (!email || !password || !org_name) {
       // TODO: truly validate data
       throw createCustomError('Missing required fields', 400);
     }
-    
+
     // Create the organization
     const organization = await Organization.create({
       name: org_name,
