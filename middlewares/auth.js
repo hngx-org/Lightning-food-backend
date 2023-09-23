@@ -32,8 +32,6 @@ async function auth(req, res, next) {
   }
 }
 
-
-
 /**
  * checks if the user is an admin user
  * @requires auth middleware be added first
