@@ -11,7 +11,6 @@ const {
 
 // admin user middleware to block non admin from accessing the follow routes
 
-
 router.post('/confirm-invite', confirmInviteCode);
 router.post('/create', createOrganization);
 

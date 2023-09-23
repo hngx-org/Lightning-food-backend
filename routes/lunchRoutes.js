@@ -9,7 +9,6 @@ const { auth } = require('../middlewares/auth');
 // Add auth middleware
 router.use(auth);
 
-
 // Define a route to get lunch details by user ID
 router.get('/:userId', getLunchDetailsByUserId);
 

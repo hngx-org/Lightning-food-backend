@@ -44,7 +44,6 @@ async function getUserById(req, res, next) {
   }
 }
 
-// Controllers Function to register new user
 async function getAllUsers(req, res, next) {
   try {
     const users = await User.findAll({
