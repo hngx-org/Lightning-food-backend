@@ -6,6 +6,8 @@ const errorHandlerMiddleware = require('./middlewares/error-handler');
 const userRoutes = require('./routes/users');
 const orgRoutes = require('./routes/orgRoutes');
 const lunchRoutes = require('./routes/lunchRoutes');
+const authRoutes = require('./routes/auth.route');
+const withDrawalRoute = require('./routes/withdraw.route');
 const sequelize = require('./db/db');
 
 const app = express();
@@ -15,13 +17,20 @@ app.use(express.json());
 app.use(helmet());
 const PORT = process.env.PORT || 4000;
 
+app.use('/api/users', userRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/organization', orgRoutes);
-app.use('/api/', userRoutes);
 app.use('/api/lunch', lunchRoutes);
+app.use('/api/withdrawals', withDrawalRoute);
+
+app.use('/', (req, res) => {
+  res.status(200).send(`<h1>Welcome to Team Lightning Free Lunch App</h1>
+                       <br><p><a href=''>Click here</a> to go to the API doc<p>`)
+})
 
 // Middlewares
-app.use(notFound);
 app.use(errorHandlerMiddleware);
+app.use(notFound);
 
 sequelize.sync().then(() => {
   // Remove console.log() before production
@@ -30,3 +39,5 @@ sequelize.sync().then(() => {
     console.log(`Server is running on port ${PORT}`);
   });
 });
+
+module.exports = app; //for testing

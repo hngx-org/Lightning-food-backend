@@ -4,22 +4,30 @@ const router = express.Router();
 const {
   getMe,
   getUserById,
-  createUser,
   getAllUsers,
   updateUser,
+  forgotPassword,
+  resetPassword,
   deleteUser,
+  createUser,
 } = require('../controllers/userController');
-const loginController = require('../controllers/userLoginController');
-const logoutController = require('../controllers/userLogoutController');
+const { auth, adminUser } = require('../middlewares/auth');
 
-router.post('/auth/signup', createUser);
-router.post('/auth/login', loginController);
-router.post('/auth/logout', logoutController);
-router.get('/users/me', getMe);
-router.get('/users/:id', getUserById);
-router.get('/users/', getAllUsers);
-router.put('/users/:id', updateUser);
-router.delete('/users/:id', deleteUser);
+// forgot password
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password', resetPassword);
+
+router.use(auth);
+
+router.post('/sigup', createUser)
+router.get('/me', getMe);
+router.get('/:id', getUserById);
+router.get('/', getAllUsers);
+router.put('/:id', updateUser);
+
+router.use(adminUser);
+
+router.delete('/:id', deleteUser);
 
 module.exports = router;
 

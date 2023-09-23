@@ -1,8 +1,9 @@
 /* eslint-disable camelcase */
-const bcrypt = require('bcrypt'); // import bcrypt to hash password
 const User = require('../models/user.model'); //import user model
+const { createCustomError } = require('../errors/custom-errors');
+const { sendUserOtp } = require('./mailController');
 
-async function getMe(req, res) {
+async function getMe(req, res, next) {
   try {
     const user = await User.findOne({ where: { id: req.user.id } });
 
@@ -22,17 +23,13 @@ async function getMe(req, res) {
   }
 }
 
-async function getUserById(req, res) {
+async function getUserById(req, res, next) {
   try {
     const userId = req.params.id;
     const user = await User.findOne({ where: { id: userId } });
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found',
-        data: null,
-      });
+      throw createCustomError('User not found', 404);
     }
 
     res.status(200).json({
@@ -43,24 +40,14 @@ async function getUserById(req, res) {
       },
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: 'Internal Server Error',
-      data: null,
-    });
+    next(error);
   }
 }
 
 // Controllers Function to register new user
 async function createUser(req, res) {
   try {
-    const {
-      first_name,
-      last_name,
-      email,
-      phone,
-      password,
-    } = req.body;
+    const { first_name, last_name, email, phone, password } = req.body;
 
     // Validate input data
     if (!first_name || !last_name || !email || !password) {
@@ -80,14 +67,6 @@ async function createUser(req, res) {
       email,
       phone,
       password_hash: hashedPassword,
-      is_admin,
-      profile_pic,
-      org_id,
-      launch_credit_balance,
-      refresh_token,
-      bank_code,
-      bank_name,
-      bank_number,
     };
 
     const newUser = await User.create(user);
@@ -109,18 +88,19 @@ async function createUser(req, res) {
         data: null,
       });
     }
-
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-      data: null,
-    });
   }
 }
 
-async function getAllUsers(req, res) {
+return res.status(500).json({
+  success: false,
+  message: error.message,
+  data: null,
+});
+async function getAllUsers(req, res, next) {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      where: { org_id: req.user.org_id },
+    });
 
     res.status(200).json({
       success: true,
@@ -137,7 +117,7 @@ async function getAllUsers(req, res) {
     });
   }
 }
-async function deleteUser(req, res) {
+async function deleteUser(req, res, next) {
   try {
     const userId = req.params.id;
 
@@ -168,7 +148,7 @@ async function deleteUser(req, res) {
   }
 }
 
-async function updateUser(req, res) {
+async function updateUser(req, res, next) {
   try {
     const userId = req.params.id;
     const {
@@ -218,11 +198,64 @@ async function updateUser(req, res) {
   }
 }
 
+async function forgotPassword(req, res, next) {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(404).json({
+      success: false,
+      message: 'User not found',
+    });
+  }
+
+  const user = await User.findOne({ where: { email } });
+  if (!user) {
+    throw createCustomError('Invalid credentials', 404);
+  }
+
+  const response = await sendUserOtp(user.id, email);
+
+  let status = 500;
+  if (response.status === true) {
+    status = 202;
+  }
+
+  res.status(status).json(response);
+}
+
+async function resetPassword(req, res) {
+  const { email, otp, password } = req.body;
+  if (!(email && otp && password)) {
+    return res.status(404).json({
+      success: false,
+      message: 'User not found',
+    });
+  }
+
+  const user = await User.findOne({ where: { email } });
+  if (!user) {
+    throw createCustomError('Invalid credentials', 404);
+  }
+
+  // const response = await verifyOtp(user.id, otp)
+
+  // update password
+  user.password = password;
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: 'Password reset successfully',
+    data: null,
+  });
+}
+
 module.exports = {
   getMe,
   getUserById,
-  createUser,
   getAllUsers,
   updateUser,
   deleteUser,
+  forgotPassword,
+  resetPassword,
+  createUser,
 };

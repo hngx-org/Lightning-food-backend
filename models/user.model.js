@@ -8,18 +8,15 @@ const User = sequelize.define(
   'User',
   {
     id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       primaryKey: true,
-      allowNull: false,
-      defaultValue: DataTypes.UUIDV4,
+      autoIncrement: true,
     },
     first_name: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     last_name: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     email: {
       type: DataTypes.STRING,
@@ -31,20 +28,21 @@ const User = sequelize.define(
       allowNull: false,
     },
     phone: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(20),
       unique: true,
     },
     is_admin: {
       type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
     profile_pic: {
       type: DataTypes.STRING,
     },
     org_id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       references: { model: Organization, key: 'id' },
     },
-    launch_credit_balance: {
+    lunch_credit_balance: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
@@ -59,6 +57,21 @@ const User = sequelize.define(
     },
     bank_number: {
       type: DataTypes.STRING,
+    },
+    bank_region: {
+      type: DataTypes.STRING,
+    },
+    currency_code: {
+      type: DataTypes.STRING(4),
+      defaultValue: 'NGN',
+    },
+    currency: {
+      type: DataTypes.STRING(128),
+      defaultValue: 'Naira',
+    },
+    is_deleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
   {
