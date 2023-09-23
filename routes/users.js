@@ -1,4 +1,7 @@
 const express = require('express');
+const {
+  createPasswordController,
+} = require('../controllers/createPasswordController');
 
 const router = express.Router();
 const {
@@ -22,6 +25,7 @@ router.get('/me', getMe);
 router.get('/:id', getUserById);
 router.get('/', getAllUsers);
 router.put('/:id', updateUser);
+router.patch('/update-password', createPasswordController);
 
 router.use(adminUser);
 

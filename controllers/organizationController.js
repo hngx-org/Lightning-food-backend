@@ -47,7 +47,6 @@ const sendInviteCode = async (req, res, next) => {
     ).toString();
 
     // Save the invitation details in the database
-    console.log(email);
     await orgInvites.create({
       email: email,
       token: verificationCode,

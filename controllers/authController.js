@@ -5,20 +5,40 @@ const User = require('../models/user.model');
 const { createCustomError } = require('../errors/custom-errors');
 const Organization = require('../models/organization.model');
 const OrgLunchWallet = require('../models/org_lunch_wallet.model');
-
+const {sendEmail} = require('./mailController') 
 const secretKey = process.env.JWT_SECRET_KEY;
+
+async function validateEmail(req, res, next) {
+  try {
+    const email = req.body.email;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    if (!emailRegex.test(email)) {
+      throw createCustomError('Invalid email format', 400);
+    }
+
+    await sendEmail(email);
+    
+    next();
+  } catch (error) {
+    console.error(`Error sending email: ${error.message}`);
+    next(createCustomError('Invalid email', 400));
+  }
+}
+
+
 
 async function createUser(req, res, next) {
   try {
     const {
       first_name,
       last_name,
+      email,
       phone,
+      org_id,
       password,
-      is_admin,
-      profile_pic,
       lunch_credit_balance,
-      refresh_token,
+      is_admin,
       bank_code,
       bank_name,
       bank_number,
@@ -35,16 +55,15 @@ async function createUser(req, res, next) {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const user = {
-      first_name: 'John',
-      last_name: 'Doe',
-      email: req.email,
+      first_name: first_name || 'John',
+      last_name: last_name || 'Doe',
+      email: req.email || email,
       phone,
       password_hash: hashedPassword,
-      is_admin,
+      is_admin: is_admin || false,
       profile_pic: 'https://cdn-icons-png.flaticon.com/512/147/147142.png',
-      org_id: req.org_id,
-      lunch_credit_balance: 10,
-      refresh_token,
+      org_id: req.org_id || org_id,
+      lunch_credit_balance: lunch_credit_balance || 1000,
       bank_code,
       bank_name,
       bank_number,
@@ -78,7 +97,6 @@ const loginUser = async (req, res, next) => {
       throw createCustomError('Fill all required fields', 400);
     }
 
-    console.log(1);
     const user = await User.findOne({ where: { email } });
     if (!user) {
       throw createCustomError('Invalid credentials', 404);
@@ -151,11 +169,11 @@ async function createOrgAndUser(req, res, next) {
     //   throw createCustomError('Missing required fields', 400);
     // }
 
-    if (!email || !password || !org_name) {
+    if (!email || !password || !org_name || !lunch_price) {
       // TODO: truly validate data
       throw createCustomError('Missing required fields', 400);
     }
-    
+
     // Create the organization
     const organization = await Organization.create({
       name: org_name,
@@ -178,7 +196,7 @@ async function createOrgAndUser(req, res, next) {
     }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    console.log(organization.id);
+
     const user = {
       first_name,
       last_name,
@@ -187,15 +205,11 @@ async function createOrgAndUser(req, res, next) {
       password_hash: hashedPassword,
       is_admin: true,
       org_id: organization.id,
-      lunch_credit_balance: 100000,
+      lunch_credit_balance: 10000,
     };
 
     const newUser = await User.create(user);
     delete newUser.password_hash;
-
-    const userWithoutPassword = Object.assign(newUser.toJSON);
-    delete userWithoutPassword.password_hash;
-    console.log(userWithoutPassword);
 
     return res.status(200).json({
       success: true,
@@ -213,9 +227,8 @@ async function createOrgAndUser(req, res, next) {
       errorMessage = errorMessage[0].toUpperCase() + errorMessage.slice(1);
       next(createCustomError(errorMessage, 400));
     }
-    console.log(error);
     next(error.message);
   }
 }
 
-module.exports = { createUser, loginUser, logoutUser, createOrgAndUser };
+module.exports = { validateEmail, createUser, loginUser, logoutUser, createOrgAndUser };

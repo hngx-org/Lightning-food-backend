@@ -21,12 +21,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/organization', orgRoutes);
 app.use('/api/lunch', lunchRoutes);
-app.use('/api/withdrawals', withDrawalRoute);
-
-app.use('/', (req, res) => {
-  res.status(200).send(`<h1>Welcome to Team Lightning Free Lunch App</h1>
-                       <br><p><a href=''>Click here</a> to go to the API doc<p>`)
-})
+app.use('/api/withdrawal', withDrawalRoute);
 
 // Middlewares
 app.use(errorHandlerMiddleware);
