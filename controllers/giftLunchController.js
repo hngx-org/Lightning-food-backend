@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-const { Op } = require('sequelize');
-=======
 /* eslint-disable camelcase */
 // const { Op } = require('sequelize');
->>>>>>> 894762640d3b9aaded80ae114a4be6c831aeaa39
 const Lunch = require('../models/lunches.model');
 const User = require('../models/user.model');
 const response = require('../utils/response');
@@ -24,9 +20,6 @@ const giftLunch = async (req, res) => {
     if (!user)
       return res.status(404).json(response(false, 'User does not exist', null));
 
-<<<<<<< HEAD
-    const lunch = { receiverId, quantity, note, redeemed: false };
-=======
     const lunch = {
       sender_id: userId,
       receiver_id: receiver_id,
@@ -34,7 +27,6 @@ const giftLunch = async (req, res) => {
       note,
       redeemed: true,
     };
->>>>>>> 894762640d3b9aaded80ae114a4be6c831aeaa39
 
     // Create Launch
     const newLunch = await Lunch.create(lunch);

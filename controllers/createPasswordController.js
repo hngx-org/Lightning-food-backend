@@ -4,11 +4,7 @@ const { createCustomError } = require('../errors/custom-errors');
 
 const createPasswordController = async (req, res, next) => {
   const { user } = req;
-<<<<<<< HEAD
-  const { confirm_password, password } = req.body;
-=======
   const { confirmPassword, password } = req.body;
->>>>>>> ab3f5c8fe9c0c9adac8b84cb3de300eeed4195aa
 
   try {
     if (confirmPassword !== password) {

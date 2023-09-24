@@ -105,14 +105,13 @@ async function redeemGiftController(req, res) {
       });
     }
 
-    const userWithdrawing = await User.findOne({ where: { bank_number } });
+    //finding by email is more precise
+    const userWithdrawing = await User.findOne({ where: { email } });
 
-    await userWithdrawing.decrement('lunch_credit_balance :', { by: amount });
+    await userWithdrawing.decrement('lunch_credit_balance', { by: amount }); //fixed a bug on this line
     await userWithdrawing.save();
 
-    const id = await Withdrawals.id;
     const newEntry = await Withdrawals.create({
-      id,
       user_id: userWithdrawing.id,
       amount,
       status: 'success',
@@ -125,11 +124,14 @@ async function redeemGiftController(req, res) {
     await senderLunchEntry.update({ redeemed: true });
     await senderLunchEntry.save();
 
+    const newId = await Withdrawals.findOne({
+      where: { user_id: userWithdrawing.id },
+    });
     res.status(201).json({
       message: 'Withdrawal request created successfully',
       statusCode: 201,
       data: {
-        id: newEntry.id,
+        id: newId,
         user_id: User.id,
         status: 'success',
         amount,
