@@ -13,6 +13,9 @@ const orgInvites = sequelize.define(
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        isEmail: { msg: 'Invalid email' },
+      },
     },
     token: {
       type: DataTypes.STRING,

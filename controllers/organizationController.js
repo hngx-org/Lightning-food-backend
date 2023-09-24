@@ -7,6 +7,7 @@ const transporter = require('../middlewares/emailConfig');
 
 // Create a new organization and user (Admin user only)
 const createOrganization = async (req, res, next) => {
+  console.log('Hello');
   try {
     const { name, lunch_price, currency_code } = req.body;
 
@@ -47,7 +48,6 @@ const sendInviteCode = async (req, res, next) => {
     ).toString();
 
     // Save the invitation details in the database
-    console.log(email);
     await orgInvites.create({
       email: email,
       token: verificationCode,
@@ -92,40 +92,25 @@ const confirmInviteCode = async (req, res, next) => {
       where: { token: verificationCode },
     });
 
-    if (invite) {
-      res.email = invite.email;
-      res.org_id = invite.org_id;
-      res.status(200).json({
-        success: true,
-        message: 'Token verified',
-        data: {
-          org_id: invite.org_id,
-          email: invite.email,
-        },
-      });
-    } else {
-      createCustomError('Invalid verification code', 400);
+    if (!invite) {
+      throw createCustomError('Invalid verification code', 400);
     }
 
-    // // Verifing the verification code against the stored code in your database
-    // const user = await orgInvites.findOne({
-    //   where: { email, token: verificationCode },
-    // });
+    // Delete the verification code from the database
+    await orgInvites.destroy({
+      where: { token: verificationCode },
+    });
 
-    // if (!user || user.token !== verificationCode) {
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: 'Invalid email or verification code.',
-    //     data: null,
-    //   });
-    // }
-
-    // // Mark the email as verified
-    // user.email = true;
-    // user.token = null; // Optional, clear the verification code from the database or not
-    // //  There is supposed to be a field where we set the state to be true once token is validated
-
-    // await user.save();
+    res.email = invite.email;
+    res.org_id = invite.org_id;
+    res.status(200).json({
+      success: true,
+      message: 'Token verified',
+      data: {
+        org_id: invite.org_id,
+        email: invite.email,
+      },
+    });
   } catch (error) {
     next(error);
   }

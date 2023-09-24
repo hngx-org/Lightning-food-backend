@@ -30,28 +30,15 @@ async function withdrawCashController(req, res, next) {
     await userWithdrawing.decrement('lunch_credit_balance', { by: amount });
     await userWithdrawing.save();
     const newEntry = await Withdrawals.create({
-      id,
       user_id: id,
-      status: 'redeemed',
+      status: 'success',
       amount,
     });
-    // const sender = await User.findOne({ where: { email } });
-    // const senderLunchEntry = await Lunch.findOne({
-    //   where: { sender_id: sender.id },
-    // });
-    // await senderLunchEntry.update({ redeemed: true });
-    // await senderLunchEntry.save();
 
     res.status(201).json({
       message: 'Withdrawal request created successfully',
       statusCode: 201,
-      data: {
-        id: newEntry.id,
-        user_id: User.id,
-        status: 'success',
-        amount,
-        created_at: newEntry.created_at,
-      },
+      data: newEntry,
     });
   } catch (error) {
     next(error);

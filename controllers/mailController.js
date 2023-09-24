@@ -75,7 +75,6 @@ const sendUserOtp = async (userId, email) => {
       data: null,
     };
   } catch (error) {
-    console.log(error);
     return {
       status: false,
       message: `internal server error`,
