@@ -83,15 +83,14 @@ describe('Users COntroller Endpoints', () => {
     });
   });
 
-
-    describe('Users Endpoints', () => {
+  describe('Users Endpoints', () => {
     it('should fetch all users', async () => {
       const res = await request(app).get(`/api/users`);
       expect(res.status).toEqual(500);
     });
   });
 
-     describe('Users Endpoints', () => {
+  describe('Users Endpoints', () => {
     it('should fetch all users', async () => {
       const res = await request(app).post(`/api/auth/logout`);
       expect(res.status).toEqual(200);

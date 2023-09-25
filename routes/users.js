@@ -9,15 +9,9 @@ const {
   getUserById,
   getAllUsers,
   updateUser,
-  forgotPassword,
-  resetPassword,
   deleteUser,
 } = require('../controllers/userController');
 const { auth, adminUser } = require('../middlewares/auth');
-
-// forgot password
-router.post('/forgot-password', forgotPassword);
-router.post('/reset-password', resetPassword);
 
 router.use(auth);
 

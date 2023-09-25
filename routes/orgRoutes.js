@@ -3,18 +3,15 @@ const { auth, adminUser } = require('../middlewares/auth');
 
 const router = express.Router();
 const {
-  createOrganization,
+  //createOrganization,
   sendInviteCode,
   confirmInviteCode,
   updateOrgDetails,
 } = require('../controllers/organizationController');
 
-const {
-  createOrgAndUser
-} = require('../controllers/authController');
+const { createOrgAndUser } = require('../controllers/authController');
 
 // admin user middleware to block non admin from accessing the follow routes
-
 
 router.post('/confirm-invite', confirmInviteCode);
 router.post('/create', createOrgAndUser);
