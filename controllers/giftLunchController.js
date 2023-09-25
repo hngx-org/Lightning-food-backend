@@ -35,19 +35,11 @@ const giftLunch = async (req, res) => {
 
     const receiver = await User.findOne({ where: { id: receiver_id } });
 
-    const org = await user.getOrganization();
-
     //Update the sender's balance
-    await sender.update({
-      lunch_credit_balance:
-        sender.lunch_credit_balance - quantity * org.lunch_price,
-    });
+    await sender.update({ balance: sender.balance - quantity });
 
     //Update the receiver's balance
-    await receiver.update({
-      lunch_credit_balance:
-        receiver.lunch_credit_balance + quantity * org.lunch_price,
-    });
+    await receiver.update({ balance: receiver.balance + quantity });
 
     return res
       .status(201)

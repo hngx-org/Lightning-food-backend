@@ -3,19 +3,19 @@ const express = require('express');
 const router = express.Router();
 const {
   getAllLunch,
-  getLunchDetail,
+  //getLunchDetail,
   sendLunch,
   redeemGiftController,
 } = require('../controllers/lunchControllers');
 // const { giftLunch } = require('../controllers/giftLunchController');
-const { getLunchDetailsByUserId } = require('../controllers/lunchControllers');
+//const { getLunchDetailsByUserId } = require('../controllers/lunchControllers');
 const { auth } = require('../middlewares/auth');
 
 // Add auth middleware
 router.use(auth);
 
 // Define a route to get lunch details by user ID
-router.get('/:userId', getLunchDetailsByUserId);
+//router.get('/:userId', getLunchDetailsByUserId);
 
 //GET all available lunches for a user
 router.get('/', getAllLunch);
@@ -29,6 +29,6 @@ router.post('/send', sendLunch);
 router.post('/redeem', redeemGiftController);
 
 // get lunch detail
-router.get('/:lunchId', getLunchDetail);
+//router.get('/:lunchId', getLunchDetail);
 
 module.exports = router;

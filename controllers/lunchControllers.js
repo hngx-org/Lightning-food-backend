@@ -100,7 +100,6 @@ const sendLunch = async (req, res) => {
 
 async function redeemGiftController(req, res) {
   try {
-    const { id } = req.user;
     const { bank_number, bank_name, bank_code, amount, email } = req.body;
 
     if (!bank_number || !bank_name || !bank_code || !amount || !email) {
@@ -110,13 +109,13 @@ async function redeemGiftController(req, res) {
       });
     }
 
-    const userWithdrawing = await User.findOne({ where: { bank_number } }); // for-refactoring find by email
-    // validate user with bank if null save bank details to user table
+    //finding by email is more precise
+    const userWithdrawing = await User.findOne({ where: { email } });
 
-    await userWithdrawing.decrement('lunch_credit_balance :', { by: amount });
+    await userWithdrawing.decrement('lunch_credit_balance', { by: amount }); //fixed a bug on this line
     await userWithdrawing.save();
+
     const newEntry = await Withdrawals.create({
-      id,
       user_id: userWithdrawing.id,
       amount,
       status: 'success',
@@ -129,11 +128,14 @@ async function redeemGiftController(req, res) {
     await senderLunchEntry.update({ redeemed: true });
     await senderLunchEntry.save();
 
+    const newId = await Withdrawals.findOne({
+      where: { user_id: userWithdrawing.id },
+    });
     res.status(201).json({
       message: 'Withdrawal request created successfully',
       statusCode: 201,
       data: {
-        id: newEntry.id,
+        id: newId,
         user_id: User.id,
         status: 'success',
         amount,
@@ -148,49 +150,4 @@ async function redeemGiftController(req, res) {
     });
   }
 }
-
-async function getLunchDetailsByUserId(req, res, next) {
-  try {
-    const { userId } = req.params;
-    // Use Sequelize to find the user's lunch details based on the provided user ID
-    const lunchDetails = await Lunch.findOne({ where: { userId } });
-
-    if (!lunchDetails) {
-      // If no lunch details found for the user, return a 404 response
-      return res
-        .status(404)
-        .json({ error: 'Lunch details not found for this user.' });
-    }
-
-    // Return the lunch details as JSON
-    res.json({ userId, lunchDetails });
-  } catch (error) {
-    next(error);
-  }
-}
-
-async function getLunchDetail(req, res, next) {
-  try {
-    const { lunchId } = req.params;
-    // Use Sequelize to find the user's lunch details based on the provided user ID
-    const lunchDetails = await Lunch.findByPk(lunchId);
-
-    if (!lunchDetails) {
-      // If no lunch details found for the user, return a 404 response
-      throw createCustomError('Lunch details not found for this user.', 404);
-    }
-
-    // Return the lunch details as JSON
-    res.json({ lunchDetails });
-  } catch (error) {
-    next(error);
-  }
-}
-
-module.exports = {
-  getAllLunch,
-  sendLunch,
-  redeemGiftController,
-  getLunchDetailsByUserId,
-  getLunchDetail,
-};
+module.exports = { getAllLunch, sendLunch, redeemGiftController };
