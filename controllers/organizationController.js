@@ -40,7 +40,7 @@ const createOrganization = async (req, res, next) => {
 
 const sendInviteCode = async (req, res, next) => {
   try {
-    const { email, organizationId } = req.body;
+    const { email } = req.body;
 
     // Generate a random verification code
     const verificationCode = Math.floor(
@@ -51,7 +51,7 @@ const sendInviteCode = async (req, res, next) => {
     await orgInvites.create({
       email: email,
       token: verificationCode,
-      org_id: organizationId,
+      org_id: req.user.org_id,
     });
 
     // Send an email with the verification code
@@ -100,7 +100,7 @@ const confirmInviteCode = async (req, res, next) => {
     await orgInvites.destroy({
       where: { token: verificationCode },
     });
-
+    console.log(invite);
     res.email = invite.email;
     res.org_id = invite.org_id;
     res.status(200).json({
