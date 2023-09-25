@@ -22,6 +22,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/organization', orgRoutes);
 app.use('/api/lunch', lunchRoutes);
 app.use('/api/withdrawal', withDrawalRoute);
+app.use('/public/docs', express.static('./public/docs'));
 
 // Middlewares
 app.use(errorHandlerMiddleware);
