@@ -63,6 +63,10 @@ const sendLunch = async (req, res) => {
       User.findOne({ where: { id: receiver_id } }),
     ]);
 
+    if (!receiver) {
+      return createCustomError('Receiver not found', 404);
+    }
+    
     // Check if the sender has enough balance
     if (
       sender.lunch_credit_balance < totalLunchPrice ||
